@@ -852,6 +852,35 @@
     font-weight:600;
   }
   .duty-pay-est.muted{ color:var(--text-secondary); font-weight:500; }
+  /* Overtime box: uses theme tokens only, so it follows Auto / Light / Dark. --ot-text is a darker amber in light mode (amber-dim fails contrast on white). */
+  :root{ --ot-text:#8A5A00; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --ot-text:var(--amber); } }
+  :root[data-theme="dark"]{ --ot-text:var(--amber); }
+  .ot-box{ border:1px solid var(--line); border-left:4px solid var(--amber); background:var(--paper-raised); background-image:linear-gradient(color-mix(in srgb, var(--amber) 7%, transparent), color-mix(in srgb, var(--amber) 7%, transparent)); border-radius:12px; padding:12px 12px 2px; margin-bottom:14px; color:var(--text); }
+  .ot-box > .ot-title{ display:block; font-size:14px; font-weight:600; margin-bottom:2px; color:var(--text); }
+  .ot-box .ot-sub{ font-size:12.5px; line-height:1.4; color:var(--text-secondary); margin:0 0 10px; }
+  .ot-box .field input, .ot-box .field select{ background:var(--paper); color:var(--text); border:1px solid var(--line); }
+  .ot-box .field input::placeholder{ color:var(--text-secondary); opacity:.7; }
+  .ot-box .ot-preview{ font-size:13px; font-weight:600; color:var(--ot-text); margin:-4px 0 12px; min-height:1em; }
+  .ot-box .ot-preview.none{ color:var(--text-secondary); font-weight:500; }
+  .ot-tag{ color:var(--ot-text); font-weight:700; }
+  .ot-toggle{ display:flex; width:100%; align-items:center; gap:10px; cursor:pointer; padding:0 0 10px; color:var(--text); margin:0; }
+  .ot-toggle input{ width:20px; height:20px; margin:0; accent-color:var(--amber); }
+  .ot-toggle .ot-title{ margin:0; font-size:14px; font-weight:600; }
+  .ot-box:not(.ot-open){ padding-bottom:2px; }
+  .ot-box .ot-preview{ margin:0 0 12px; }
+  .ot-profile{ padding-bottom:12px; }
+  .ot-profile > .ot-title{ margin-bottom:2px; }
+  .ot-sums{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px; }
+  .ot-sum{ background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:2px; }
+  .ot-sum span{ font-size:11.5px; color:var(--text-secondary); }
+  .ot-sum b{ font-size:13.5px; color:var(--ot-text); font-variant-numeric:tabular-nums; }
+  .ot-box.ot-flash{ animation:otFlash 1.2s ease-out 1; }
+  @keyframes otFlash{ from{ box-shadow:0 0 0 3px var(--amber); } to{ box-shadow:0 0 0 3px transparent; } }
+  @media (prefers-reduced-motion: reduce){ .ot-box.ot-flash{ animation:none; } }
+  .break-edit-wrap{ margin-bottom:10px; }
+  .break-worked{ display:flex; gap:8px; align-items:center; margin:6px 0 0; font-size:13px; color:var(--text-secondary); cursor:pointer; }
+  .break-worked input{ width:18px; height:18px; margin:0; flex:none; }
   .pay-summary-bar{
     display:flex;
     justify-content:space-between;
@@ -1687,6 +1716,24 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       <p style="font-size:12px;color:var(--text-secondary);margin:10px 0 0;" id="profNote"></p>
     </div>
 
+    <div class="stat-card full ot-box ot-profile" id="profOtCard" style="margin-bottom:10px;">
+      <span class="ot-title">My overtime pay</span>
+      <p class="ot-sub">This rate prices the overtime you tick on each duty.</p>
+      <div class="field">
+        <label for="profOtMode">Overtime rate</label>
+        <select id="profOtMode" class="duty-daytype-select">
+          <option value="auto">Automatic (NBRU rate card)</option>
+          <option value="custom">My own rate</option>
+        </select>
+      </div>
+      <div class="field" id="profOtRateWrap" style="display:none;">
+        <label for="profOtRate">My overtime rate (€ per hour, gross)</label>
+        <input type="number" id="profOtRate" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 33.42">
+      </div>
+      <p class="ot-sub" id="profOtHint"></p>
+      <div id="profOtSummary" class="ot-sums"></div>
+    </div>
+
     <div class="section-head" style="margin-top:24px;">
       <h2>Stats</h2>
     </div>
@@ -1897,6 +1944,26 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       <label style="display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px;cursor:pointer;">
         <input type="checkbox" id="f-bogey" style="width:20px;height:20px;margin:0;"> Bogey duty (extra pay on non-driving time)
       </label>
+    </div>
+
+    <div class="ot-box" id="otBox">
+      <label class="ot-toggle" for="otTick">
+        <input type="checkbox" id="otTick">
+        <span class="ot-title">Overtime</span>
+      </label>
+      <div class="ot-body" id="otBody" hidden>
+        <div class="row2">
+          <div class="field">
+            <label for="f-ot-h">Hours</label>
+            <input type="number" id="f-ot-h" min="0" max="24" step="1" inputmode="numeric" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="f-ot-m">Minutes</label>
+            <input type="number" id="f-ot-m" min="0" max="59" step="1" inputmode="numeric" placeholder="0">
+          </div>
+        </div>
+      </div>
+      <div class="ot-preview none" id="otPreview"></div>
     </div>
 
     <div class="breaks-editor">
@@ -2537,6 +2604,7 @@ if(GARAGE_PACK){(function(){
     }
     var prof = loadProfile();
     var bx = dutyBogeyExtra(duty), bxTxt = bx > 0 ? ' + €' + bx.toFixed(2) + ' bogey' : '';
+    var oi = dutyOvertimeInfo(duty); if(oi) bxTxt += ' + <span class="ot-tag">€' + oi.amount.toFixed(2) + ' overtime</span> (' + fmtHM(oi.mins) + ' at €' + oi.rate.toFixed(2) + '/hr)';
     if(isHourlyPay()){
       return '<div class="duty-pay-est">Est. pay (' + fmtHM(dutyPaidMins(duty)) + ' × €' + prof.hourlyRate.toFixed(2) + '/hr' + bxTxt + '): €' + est.toFixed(2) + '</div>';
     }
@@ -2560,8 +2628,8 @@ if(GARAGE_PACK){(function(){
     try{
       var raw = localStorage.getItem(PROFILE_KEY);
       var p = raw ? JSON.parse(raw) : {};
-      return { name: p.name || '', hourlyRate: parseFloat(p.hourlyRate) > 0 ? parseFloat(p.hourlyRate) : 0, breaksPaid: !!p.breaksPaid, contractHours: parseFloat(p.contractHours) > 0 ? parseFloat(p.contractHours) : 0, minRestHours: parseFloat(p.minRestHours) > 0 ? parseFloat(p.minRestHours) : 10, zone: typeof p.zone === 'string' ? p.zone : '', bogeyRate: parseFloat(p.bogeyRate) > 0 ? parseFloat(p.bogeyRate) : 0 };
-    }catch(e){ return { name:'', hourlyRate:0, breaksPaid:false, contractHours:0, minRestHours:10, zone:'', bogeyRate:0 }; }
+      return { name: p.name || '', hourlyRate: parseFloat(p.hourlyRate) > 0 ? parseFloat(p.hourlyRate) : 0, breaksPaid: !!p.breaksPaid, contractHours: parseFloat(p.contractHours) > 0 ? parseFloat(p.contractHours) : 0, minRestHours: parseFloat(p.minRestHours) > 0 ? parseFloat(p.minRestHours) : 10, zone: typeof p.zone === 'string' ? p.zone : '', bogeyRate: parseFloat(p.bogeyRate) > 0 ? parseFloat(p.bogeyRate) : 0, otMode: p.otMode === 'custom' ? 'custom' : 'auto', otRate: parseFloat(p.otRate) > 0 ? parseFloat(p.otRate) : 0 };
+    }catch(e){ return { name:'', hourlyRate:0, breaksPaid:false, contractHours:0, minRestHours:10, zone:'', bogeyRate:0, otMode:'auto', otRate:0 }; }
   }
   function saveProfile(p){
     try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }catch(e){ console.error(e); }
@@ -2627,10 +2695,55 @@ if(GARAGE_PACK){(function(){
     var mins = Math.max(0, dutySpreadMins(duty) - dutyWorkMins(duty));
     return Math.round(mins / 60 * rate * 100) / 100;
   }
+  // ---- Overtime logged on a single duty (extra time on top of the rostered times) ----
+  // Overtime rate rows on the rate card that suit a day type
+  function otRowsFor(dayType){
+    var cat = PAY_DATA.categories[currentCategory()]; if(!cat) return [];
+    var all = cat.rows.filter(function(r){ return /^ot/i.test(r.key); });
+    var re = dayType === 'Sunday' ? /sunday/i : dayType === 'Public/Bank Holiday' ? /(publicholiday|bankholiday)/i : /(monsat|weekday)/i;
+    var m = all.filter(function(r){ return re.test(r.key); });
+    return m.length ? m : all;
+  }
+  function defaultOtKey(dayType){
+    if(loadProfile().otMode === 'custom') return 'custom';
+    var rows = otRowsFor(dayType); if(!rows.length) return 'custom';
+    // 39-hour contracts: overtime is normally past 39 hours; shorter contracts start on the 'under 39' rate
+    var prefer = contractMins() >= 39 * 60 ? /over39/i : /under39/i;
+    var hit = rows.filter(function(r){ return prefer.test(r.key); })[0];
+    return (hit || rows[0]).key;
+  }
+  function otRateFor(dayType, key, customRate){
+    if(key === 'custom') return customRate > 0 ? customRate : loadProfile().otRate;
+    var st = loadPaySettings() || {}, yi = st.yearIndex != null ? st.yearIndex : 0;
+    var rows = otRowsFor(dayType);
+    var row = rows.filter(function(r){ return r.key === key; })[0] || rows.filter(function(r){ return r.key === defaultOtKey(dayType); })[0];
+    return row && typeof row.values[yi] === 'number' ? row.values[yi] : 0;
+  }
+  // Minutes of breaks the driver worked through; these are paid as overtime. (Not counted if breaks are already paid at your hourly rate.)
+  function workedBreakMins(duty){
+    if(!duty || !duty.breaks) return 0;
+    if(isHourlyPay() && loadProfile().breaksPaid) return 0;
+    return duty.breaks.reduce(function(acc, b){
+      if(!b || !b.worked) return acc;
+      var bs = timeToMinutes(b.start), be = timeToMinutes(b.end);
+      if(bs == null || be == null) return acc;
+      var span = be - bs; if(span < 0) span += 1440; return acc + span;
+    }, 0);
+  }
+  function dutyOvertimeInfo(duty){
+    if(!duty) return null;
+    var mins = (parseInt(duty.otMins, 10) || 0) + workedBreakMins(duty);
+    if(!(mins > 0)) return null;
+    var rate = otRateFor(duty.dayType || 'Mon\u2013Sat', duty.otRateKey || defaultOtKey(duty.dayType || 'Mon\u2013Sat'), parseFloat(duty.otCustomRate));
+    if(!(rate > 0)) return null;
+    return { mins: mins, rate: rate, amount: Math.round(mins / 60 * rate * 100) / 100 };
+  }
+  function dutyOvertimePay(duty){ var o = dutyOvertimeInfo(duty); return o ? o.amount : 0; }
+
   function estimateDutyPay(duty){
-    var base = estimateDutyPayBase(duty);
-    if(base == null) return null;
-    return Math.round((base + dutyBogeyExtra(duty)) * 100) / 100;
+    var base = estimateDutyPayBase(duty), ot = dutyOvertimePay(duty);
+    if(base == null) return ot > 0 ? Math.round(ot * 100) / 100 : null;
+    return Math.round((base + dutyBogeyExtra(duty) + ot) * 100) / 100;
   }
   function estimateDutyPayBase(duty){
     var prof = loadProfile();
@@ -2677,6 +2790,7 @@ if(GARAGE_PACK){(function(){
     document.getElementById('f-notes').value = '';
     document.getElementById('f-daytype').value = defaultDayType(todayStr());
     document.getElementById('f-bogey').checked = false;
+    fillOtForm(null);
     updateDayTypeHint();
     currentFormRouteKey = null;
     currentDutyRoute = null;
@@ -2704,10 +2818,11 @@ if(GARAGE_PACK){(function(){
     document.getElementById('f-notes').value = duty.notes || '';
     document.getElementById('f-daytype').value = duty.dayType || defaultDayType(duty.date || todayStr());
     document.getElementById('f-bogey').checked = !!duty.bogey;
+    fillOtForm(duty);
     updateDayTypeHint();
     currentFormRouteKey = duty.routeKey || null;
     updateDirectionDisplay();
-    currentBreaks = (duty.breaks || []).map(function(b){ return { start:b.start, end:b.end, label:b.label||'' }; });
+    currentBreaks = (duty.breaks || []).map(function(b){ return { start:b.start, end:b.end, label:b.label||'', worked:!!b.worked }; });
     renderBreaksEditor();
     document.getElementById('formError').classList.remove('show');
     modalBackdrop.classList.add('open');
@@ -2756,6 +2871,41 @@ if(GARAGE_PACK){(function(){
     el.textContent = n ? '📅 ' + n + ' — public holiday rate applies' : '';
   }
 
+  // ---- Overtime fields in the duty form ----
+  function fillOtForm(duty){
+    var mins = duty && parseInt(duty.otMins, 10) > 0 ? parseInt(duty.otMins, 10) : 0;
+    document.getElementById('f-ot-h').value = mins ? Math.floor(mins / 60) : '';
+    document.getElementById('f-ot-m').value = mins ? mins % 60 : '';
+    setOtOpen(!!(mins || (duty && workedBreakMins(duty))));
+    updateOtPreview();
+  }
+  function refreshOtForm(){ updateOtPreview(); }
+  // Overtime is priced from Profile (rate card by day type, or your own rate), so the duty only needs the time
+  function setOtOpen(open){
+    var b = document.getElementById('otBody'), t = document.getElementById('otTick'); if(!b || !t) return;
+    b.hidden = !open; t.checked = !!open;
+    document.getElementById('otBox').classList.toggle('ot-open', !!open);
+    if(!open){ document.getElementById('f-ot-h').value = ''; document.getElementById('f-ot-m').value = ''; }
+    updateOtPreview();
+  }
+  document.getElementById('otTick').addEventListener('change', function(){ setOtOpen(this.checked); if(this.checked) document.getElementById('f-ot-h').focus(); });
+  function updateOtPreview(){
+    var el = document.getElementById('otPreview'); if(!el) return;
+    var h = parseInt(document.getElementById('f-ot-h').value, 10) || 0, m = parseInt(document.getElementById('f-ot-m').value, 10) || 0;
+    var extra = Math.max(0, h) * 60 + Math.max(0, Math.min(59, m));
+    var wb = workedBreakMins({ breaks: currentBreaks });
+    var mins = extra + wb;
+    var dt = document.getElementById('f-daytype').value || 'Mon\u2013Sat';
+    var rate = otRateFor(dt, defaultOtKey(dt), 0);
+    if(!mins){ el.className = 'ot-preview none'; el.textContent = ''; el.style.display = 'none'; return; }
+    el.style.display = '';
+    if(!(rate > 0)){ el.className = 'ot-preview none'; el.textContent = 'No overtime rate set. Add one under My overtime pay in Profile.'; return; }
+    el.className = 'ot-preview';
+    el.textContent = '\u20ac' + (Math.round(mins / 60 * rate * 100) / 100).toFixed(2) + ' (' + fmtHM(mins) + ' at \u20ac' + rate.toFixed(2) + '/hr' + (wb ? ', incl. ' + fmtHM(wb) + ' worked break' : '') + ')';
+  }
+  ['f-ot-h','f-ot-m'].forEach(function(id){ document.getElementById(id).addEventListener('input', updateOtPreview); });
+  ['f-daytype','f-date'].forEach(function(id){ document.getElementById(id).addEventListener('change', updateOtPreview); });
+
   function defaultDayType(dateStr){
     if(!dateStr) return 'Mon–Sat';
     if(bankHolidayName(dateStr)) return 'Public/Bank Holiday';
@@ -2765,20 +2915,24 @@ if(GARAGE_PACK){(function(){
 
   function renderBreaksEditor(){
     breaksListEl.innerHTML = currentBreaks.map(function(b, i){
-      return '<div class="break-edit-row">' +
+      return '<div class="break-edit-wrap"><div class="break-edit-row">' +
         '<input type="time" value="'+(b.start||'')+'" data-brk="'+i+'" data-field="start" aria-label="Break start time">' +
         '<input type="time" value="'+(b.end||'')+'" data-brk="'+i+'" data-field="end" aria-label="Break end time">' +
         '<input type="text" value="'+escapeAttr(b.label||'')+'" placeholder="e.g. canteen" data-brk="'+i+'" data-field="label" aria-label="Break location">' +
         '<button type="button" class="remove-break" data-remove-brk="'+i+'" aria-label="Remove break">×</button>' +
+      '</div>' +
+      '<label class="break-worked"><input type="checkbox" data-brk="'+i+'" data-field="worked"'+(b.worked ? ' checked' : '')+'> Worked through this break (paid as overtime)</label>' +
       '</div>';
     }).join('');
 
     breaksListEl.querySelectorAll('input').forEach(function(inp){
-      inp.addEventListener('input', function(){
+      var handler = function(){
         var idx = parseInt(inp.getAttribute('data-brk'),10);
         var field = inp.getAttribute('data-field');
-        currentBreaks[idx][field] = inp.value;
-      });
+        currentBreaks[idx][field] = inp.type === 'checkbox' ? inp.checked : inp.value;
+        updateOtPreview();
+      };
+      inp.addEventListener(inp.type === 'checkbox' ? 'change' : 'input', handler);
     });
     breaksListEl.querySelectorAll('[data-remove-brk]').forEach(function(btn){
       btn.addEventListener('click', function(){
@@ -2790,7 +2944,7 @@ if(GARAGE_PACK){(function(){
   }
 
   document.getElementById('addBreakBtn').addEventListener('click', function(){
-    currentBreaks.push({ start:'', end:'', label:'' });
+    currentBreaks.push({ start:'', end:'', label:'', worked:false });
     renderBreaksEditor();
   });
 
@@ -3465,6 +3619,16 @@ if(GARAGE_PACK){(function(){
       bogey: !!(document.getElementById('f-bogey').checked || (!editingId && lastFound && lastFound.duty && isBogeyRoute(lastFound.duty.route))),
       breaks: cleanBreaks
     };
+    (function(){
+      var h = parseInt(document.getElementById('f-ot-h').value, 10) || 0, m = parseInt(document.getElementById('f-ot-m').value, 10) || 0;
+      var tot = Math.max(0, h) * 60 + Math.max(0, Math.min(59, m));
+      var anyWorked = cleanBreaks.some(function(b){ return b.worked; });
+      if(tot > 0) dutyObj.otMins = tot;
+      if(tot > 0 || anyWorked){
+        var prev = editingId ? duties.find(function(d){ return d.id === editingId; }) : null;
+        if(prev && prev.otRateKey){ dutyObj.otRateKey = prev.otRateKey; if(prev.otCustomRate > 0) dutyObj.otCustomRate = prev.otCustomRate; }
+      }
+    })();
 
     if(editingId){
       var idx = duties.findIndex(function(d){ return d.id === editingId; });
@@ -4022,6 +4186,8 @@ if(GARAGE_PACK){(function(){
     var sub;
     if(isHourlyPay()) sub = fmtHM(paidMins) + ' paid × €' + prof.hourlyRate.toFixed(2) + '/hr' + (prof.breaksPaid ? ' (breaks included)' : ' (breaks excluded)');
     else sub = 'NBRU rate card' + (ot ? ' · incl. ~€' + ot.amount.toFixed(2) + ' overtime (' + fmtHM(ot.mins) + ' over contract)' : '');
+    var mOt = 0; weekDuties.forEach(function(d){ mOt += dutyOvertimePay(d); });
+    if(mOt > 0) sub += ' · incl. €' + mOt.toFixed(2) + ' logged overtime';
     return '<div class="stat-card full">' +
       '<span class="sc-label">Est. gross pay this week</span>' +
       '<span class="sc-value">€' + total.toFixed(2) + '</span>' +
@@ -4032,13 +4198,14 @@ if(GARAGE_PACK){(function(){
   // Where this week's estimate comes from: basic, overtime and bogey extra
   function payBreakdownHtml(weekDuties){
     if(!weekDuties.length || !hasPaySource()) return '';
-    var basic = 0, bogey = 0, bogeyDuties = 0, nonDriving = 0;
+    var basic = 0, bogey = 0, bogeyDuties = 0, nonDriving = 0, loggedOt = 0, loggedOtMins = 0;
     weekDuties.forEach(function(d){
       var b = estimateDutyPayBase(d); if(b != null) basic += b;
       if(d.bogey){ bogeyDuties++; nonDriving += Math.max(0, dutySpreadMins(d) - dutyWorkMins(d)); }
       bogey += dutyBogeyExtra(d);
+      var oi = dutyOvertimeInfo(d); if(oi){ loggedOt += oi.amount; loggedOtMins += oi.mins; }
     });
-    var ot = overtimeEstimate(weekDuties), otAmt = ot ? ot.amount : 0;
+    var ot = overtimeEstimate(weekDuties), otAmt = (ot ? ot.amount : 0) + loggedOt;
     var total = basic + otAmt + bogey; if(!(total > 0)) return '';
     var pc = function(v){ return (Math.round(v / total * 1000) / 10) + '%'; };
     var legend = '<span class="l-basic">Basic €' + basic.toFixed(2) + '</span>' +
@@ -4047,6 +4214,7 @@ if(GARAGE_PACK){(function(){
     var sub = '';
     if(bogeyDuties && bogey > 0) sub = bogeyDuties + ' bogey dut' + (bogeyDuties===1?'y':'ies') + ' · ' + fmtHM(nonDriving) + ' non-driving time at €' + loadProfile().bogeyRate.toFixed(2) + '/hr.';
     else if(bogeyDuties) sub = bogeyDuties + ' bogey dut' + (bogeyDuties===1?'y':'ies') + ' marked, but no bogey rate is set in Profile yet, so no extra is counted.';
+    if(loggedOt > 0) sub += (sub ? ' ' : '') + 'Includes €' + loggedOt.toFixed(2) + ' for ' + fmtHM(loggedOtMins) + ' of overtime logged on your duties.';
     return '<div class="stat-card full"><span class="sc-label">Pay breakdown</span>' +
       '<div class="pb-bar" role="img" aria-label="Basic €' + basic.toFixed(2) + ', overtime €' + otAmt.toFixed(2) + ', bogey €' + bogey.toFixed(2) + '">' +
         '<div class="pb-seg pb-basic" style="width:' + pc(basic) + '"></div>' +
@@ -4105,6 +4273,34 @@ if(GARAGE_PACK){(function(){
         });
       });
     } else { chipsEl.innerHTML = ''; }
+    renderOtProfile(true);
+  }
+
+  // ---- Overtime pay card in Profile: default rate + what you've logged ----
+  function renderOtProfile(fill){
+    var prof = loadProfile();
+    if(fill){
+      document.getElementById('profOtMode').value = prof.otMode;
+      document.getElementById('profOtRate').value = prof.otRate > 0 ? prof.otRate.toFixed(2) : '';
+    }
+    var custom = document.getElementById('profOtMode').value === 'custom';
+    document.getElementById('profOtRateWrap').style.display = custom ? '' : 'none';
+    var hint = document.getElementById('profOtHint');
+    var rows = otRowsFor('Mon\u2013Sat'), st = loadPaySettings() || {}, yi = st.yearIndex || 0;
+    var r0 = rows.filter(function(r){ return r.key === defaultOtKey('Mon\u2013Sat'); })[0];
+    hint.textContent = custom ? 'This rate is used for every new overtime entry. You can still change it on a single duty.'
+      : (rows.length ? 'Uses the NBRU overtime rate for each duty\u2019s day type' + (r0 && typeof r0.values[yi] === 'number' ? ' (Mon\u2013Sat: \u20ac' + r0.values[yi].toFixed(2) + '/hr)' : '') + '.'
+                     : 'No overtime rates on the rate card for your contract type, so choose \u201cMy own rate\u201d.');
+    var now = new Date(), ym = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2);
+    var mM = 0, mP = 0, aM = 0, aP = 0;
+    (duties || []).forEach(function(d){
+      var o = dutyOvertimeInfo(d); if(!o) return;
+      aM += o.mins; aP += o.amount;
+      if(String(d.date || '').slice(0, 7) === ym){ mM += o.mins; mP += o.amount; }
+    });
+    document.getElementById('profOtSummary').innerHTML =
+      '<div class="ot-sum"><span>This month</span><b>' + fmtHM(mM) + ' \u00b7 \u20ac' + mP.toFixed(2) + '</b></div>' +
+      '<div class="ot-sum"><span>All logged</span><b>' + fmtHM(aM) + ' \u00b7 \u20ac' + aP.toFixed(2) + '</b></div>';
   }
 
   function profileChanged(){
@@ -4123,16 +4319,19 @@ if(GARAGE_PACK){(function(){
       bogeyRate: (parseFloat(document.getElementById('profBogey').value) > 0) ? parseFloat(document.getElementById('profBogey').value) : 0,
       contractHours: (h > 0 && isFinite(h)) ? h : 0,
       minRestHours: (parseFloat(document.getElementById('profRest').value) > 0) ? parseFloat(document.getElementById('profRest').value) : 0,
-      zone: document.getElementById('profZoneField').style.display === 'none' ? '' : document.getElementById('profZone').value
+      zone: document.getElementById('profZoneField').style.display === 'none' ? '' : document.getElementById('profZone').value,
+      otMode: document.getElementById('profOtMode').value === 'custom' ? 'custom' : 'auto',
+      otRate: (parseFloat(document.getElementById('profOtRate').value) > 0) ? parseFloat(document.getElementById('profOtRate').value) : 0
     });
+    renderOtProfile(false);
     if(changedCat) renderProfileCard();   // show/hide the part-time fields and refresh hints
     renderStatsView();
     renderRestPeriods();
     updateTopbarStats();
     render();
   }
-  ['profName','profRate','profHours','profRest','profBogey'].forEach(function(id){ document.getElementById(id).addEventListener('input', profileChanged); });
-  ['profEmployment','profYear','profBreaksPaid','profZone'].forEach(function(id){ document.getElementById(id).addEventListener('change', profileChanged); });
+  ['profName','profRate','profHours','profRest','profBogey','profOtRate'].forEach(function(id){ document.getElementById(id).addEventListener('input', profileChanged); });
+  ['profEmployment','profYear','profBreaksPaid','profZone','profOtMode'].forEach(function(id){ document.getElementById(id).addEventListener('change', profileChanged); });
 
   // ---- Month view ----
   var statsMode = 'week', statsMonthOffset = 0, monthSelectedDay = null;
@@ -4717,6 +4916,8 @@ if(GARAGE_PACK){(function(){
     }
     if(noEst) notes.push(noEst + ' logged duty/duties had no pay estimate and are not counted.');
     if(otTotal > 0) notes.push('Includes ~€' + otTotal.toFixed(2) + ' estimated overtime.');
+    var loggedOtTotal = 0, loggedOtCount = 0; all.forEach(function(d){ var p = dutyOvertimePay(d); if(p > 0){ loggedOtTotal += p; loggedOtCount++; } });
+    if(loggedOtTotal > 0) notes.push('Includes €' + loggedOtTotal.toFixed(2) + ' overtime you logged on ' + loggedOtCount + ' dut' + (loggedOtCount === 1 ? 'y' : 'ies') + '.');
     var bogeyTotal = 0; all.forEach(function(d){ bogeyTotal += dutyBogeyExtra(d); });
     if(bogeyTotal > 0) notes.push('Includes €' + bogeyTotal.toFixed(2) + ' bogey extra at the rate set in Profile.');
     notes.push('Basic pay only — shift allowance, bank holiday premiums and other extras aren\u2019t included.');
@@ -4838,6 +5039,23 @@ if(GARAGE_PACK){(function(){
       });
     }
   }catch(e){}
+
+  // Quick-add shortcuts: open the app with ?action=add or ?action=overtime (used by the home-screen shortcuts in manifest.webmanifest)
+  (function(){
+    try{
+      var q = new URLSearchParams(location.search), a = q.get('action') || (location.hash||'').replace(/^#/, '');
+      if(a !== 'add' && a !== 'overtime') return;
+      openAdd();
+      if(a === 'overtime'){
+        document.getElementById('modalTitle').textContent = 'Log overtime';
+        setOtOpen(true);
+        var box = document.getElementById('otBox'), h = document.getElementById('f-ot-h');
+        if(box){ box.scrollIntoView({ block:'center' }); box.classList.add('ot-flash'); }
+        if(h) h.focus({ preventScroll:true });
+      }
+      if(history.replaceState){ history.replaceState(null, '', location.pathname); } // so a refresh doesn't reopen the form
+    }catch(e){}
+  })();
 
   loadIncidents();
   updateNotifStatus();
