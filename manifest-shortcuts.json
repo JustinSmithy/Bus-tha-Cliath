@@ -1,0 +1,16 @@
+"shortcuts": [
+  {
+    "name": "Add a duty",
+    "short_name": "Add duty",
+    "description": "Open straight to the Add a duty form",
+    "url": "./?action=add",
+    "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+  },
+  {
+    "name": "Log overtime",
+    "short_name": "Overtime",
+    "description": "Open straight to the overtime box",
+    "url": "./?action=overtime",
+    "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+  }
+]
