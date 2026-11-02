@@ -288,7 +288,7 @@
   }
   .timeline-track{
     position:relative;
-    height:26px;
+    height:30px;
     background:var(--line-soft);
     border-radius:2px;
     overflow:hidden;
@@ -298,7 +298,26 @@
     background: repeating-linear-gradient(135deg, var(--depot-blue) 0px, var(--depot-blue) 8px, var(--depot-blue-dim) 8px, var(--depot-blue-dim) 16px);
     opacity:0.85;
   }
+  .timeline-blocklabel{
+    position:absolute; top:0; bottom:0; z-index:1;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 4px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+    font-size:12px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.6);
+    pointer-events:none;
+  }
+  .timeline-blockinfo{ display:flex; flex-direction:column; gap:3px; margin-top:8px; font-size:12.5px; }
+  .timeline-blockinfo .tb-blk{ font-family:var(--font-mono); color:var(--text); }
+  .timeline-blockinfo .tb-blk b{ background:var(--depot-blue); color:#fff; border-radius:2px; padding:0 6px; margin-right:4px; }
+  .timeline-blockinfo .tb-path{ display:block; font-family:var(--font-body); font-size:12px; color:var(--text-secondary); margin:1px 0 3px 2px; }
+  .timeline-blockinfo .tb-ph{ display:block; font-size:12px; font-weight:600; color:var(--text); margin:0 0 2px 2px; }
+  .timeline-blockinfo .tb-ph::before{ content:'⇄ '; color:var(--amber-dim); }
+  .rt-27{ --rc:#1F5FAD; } .rt-77a{ --rc:#1B8CB8; } .rt-56a{ --rc:#4A55B8; }
+  .timeline-blocklabel{ background:repeating-linear-gradient(135deg, var(--rc, var(--depot-blue)) 0 8px, rgba(0,0,0,.18) 8px 16px); }
+  .timeline-blockinfo .tb-blk b{ background:var(--rc, var(--depot-blue)); }
+  .timeline-blockinfo .tb-brk{ font-weight:600; color:var(--text-secondary); padding-left:2px; }
+  .timeline-blockinfo .tb-brk::before{ content:''; display:inline-block; width:10px; height:10px; background:var(--amber); border-radius:2px; margin-right:6px; vertical-align:-1px; }
   .timeline-break{
+    z-index:2;
     position:absolute;
     top:0; bottom:0;
     background:var(--amber);
@@ -391,6 +410,10 @@
   .duty-extra-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
   .duty-extra-actions .dd-open{ margin-top:0; }
   .bh-hint{ font-size:12px; color:var(--amber-dim); font-weight:600; margin-top:6px; }
+  .duty-blocks{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 2px; }
+  .duty-block{ font-size:12.5px; border:1px solid var(--line); border-radius:var(--radius-card); padding:2px 8px; background:var(--paper); }
+  .duty-block-n{ color:var(--text-secondary); }
+  .duty-block b{ font-family:var(--font-mono); color:var(--text); }
   /* ---------- Duty trip details ---------- */
   .dd-head{ margin-bottom:12px; }
   .dd-sub{ font-size:12.5px; color:var(--text-secondary); margin-top:2px; }
@@ -2542,6 +2565,7 @@ if(GARAGE_PACK){(function(){
     });
 
     var breakBlocksHtml = '';
+    var brkSpans = [];
     var breakRowsHtml = '';
     var totalBreakMins = 0;
 
@@ -2553,6 +2577,7 @@ if(GARAGE_PACK){(function(){
       if(relEnd < relStart) relEnd += 1440;
       var dur = relEnd - relStart;
       totalBreakMins += dur;
+      brkSpans.push([relStart, Math.min(span, relStart + dur)]);
       var leftPct = Math.max(0, Math.min(100, (relStart/span)*100));
       var widthPct = Math.max(0.8, Math.min(100-leftPct, (dur/span)*100));
       breakBlocksHtml += '<div class="timeline-break" style="left:'+leftPct.toFixed(2)+'%;width:'+widthPct.toFixed(2)+'%;" title="'+escapeAttr(b.label||'Break')+'"></div>';
@@ -2593,6 +2618,34 @@ if(GARAGE_PACK){(function(){
       }
     }
 
+    var blockBarHtml = '', blockInfoHtml = '', routeTxt = duty.route || '';
+    try{
+      var _info = detailForDuty(duty.dutyNumber, duty.date);
+      var _g = (_info && _info.hit && _info.hit.d && _info.hit.d.g) || [];
+      var _cuts = [0]; brkSpans.sort(function(a,b){return a[0]-b[0];});
+      var _segs = [], _pos = 0;
+      brkSpans.forEach(function(b){ if(b[0] > _pos) _segs.push([_pos, b[0]]); _pos = Math.max(_pos, b[1]); });
+      if(_pos < span) _segs.push([_pos, span]);
+      _segs.forEach(function(sg, i){
+        var l = (sg[0]/span)*100, w = ((sg[1]-sg[0])/span)*100;
+        var lab = (_g.length === _segs.length && _g[i] && _g[i].r) ? _g[i].r : (_g[0] && _g[0].r) || '';
+        blockBarHtml += '<div class="timeline-blocklabel '+routeCls(lab)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%;">'+escapeHtml(lab)+'</div>';
+      });
+      if(_g.length){
+        var _rs = []; _g.forEach(function(x){ if(x.r && _rs.indexOf(x.r) < 0) _rs.push(x.r); });
+        if(_rs.length) routeTxt = 'Route ' + _rs.join(' → ');
+        if(_g.length === _segs.length){
+          var _tm = function(seg){ var t = (seg.s||[]).filter(function(x){ return x.t; }); return t.length ? [t[0], t[t.length-1]] : null; };
+          var _parts = [];
+          _g.forEach(function(seg, i){
+            var ft = _tm(seg);
+            if(ft) _parts.push('<span class="tb-blk"><b class="' + routeCls(seg.r) + '">' + escapeHtml(seg.r || '') + '</b> ' + escapeHtml(ddTime(ft[0].t)) + '–' + escapeHtml(ddTime(ft[1].t)) + '<span class="tb-path">' + (function(){ var out = []; (seg.s||[]).forEach(function(x){ if(x.t && x.l && out[out.length-1] !== x.l) out.push(x.l); }); return out.map(escapeHtml).join(' → '); })() + '</span>' + (function(){ var h = ''; (seg.s||[]).forEach(function(x){ if(x.k){ h += '<span class="tb-ph">' + (x.k === 'p' ? 'Pick up' : 'Hand over') + (x.d ? (x.k === 'p' ? ' off Duty ' : ' to Duty ') + escapeHtml(x.d) : '') + '</span>'; } }); return h; })() + '</span>');
+            if(i < _g.length-1 && ft) _parts.push('<span class="tb-brk">Break ' + escapeHtml(ft[1].l || '') + '</span>');
+          });
+          blockInfoHtml = '<div class="timeline-blockinfo">' + _parts.join('') + '</div>';
+        }
+      }
+    }catch(e){ blockBarHtml = ''; blockInfoHtml = ''; routeTxt = duty.route || ''; }
     return '' +
     '<div class="duty-card'+(isPast?' past':'')+(tag==='TODAY'?' today':'')+'">' +
       '<div class="duty-top">' +
@@ -2611,7 +2664,7 @@ if(GARAGE_PACK){(function(){
           '</button>' +
         '</div>' +
       '</div>' +
-      (duty.route ? '<div class="duty-route">'+escapeHtml(duty.route)+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span></div>' : '')) +
+      (routeTxt ? '<div class="duty-route">'+escapeHtml(routeTxt)+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span></div>' : '')) +
       '<div class="duty-times">' +
         '<div><span class="t-label">Sign on</span><span class="t-value">'+fmtTime(duty.start)+'</span></div>' +
         '<div><span class="t-label">Sign off</span><span class="t-value">'+fmtTime(duty.end)+'</span></div>' +
@@ -2620,9 +2673,11 @@ if(GARAGE_PACK){(function(){
       '<div class="timeline">' +
         '<div class="timeline-track">' +
           '<div class="timeline-driving"></div>' +
+          blockBarHtml +
           breakBlocksHtml +
           nowMarkerHtml +
         '</div>' +
+        blockInfoHtml +
         '<div class="timeline-labels"><span>'+fmtTime(duty.start)+'</span><span>'+fmtTime(duty.end)+'</span></div>' +
       '</div>' +
       (breaks.length ? '<div class="break-list">'+breakRowsHtml+'</div>' : '') +
@@ -3248,9 +3303,10 @@ if(GARAGE_PACK){(function(){
       html += '<div class="dd-meta"><span>Report <b>' + fmtTime(row.report) + '</b></span><span>Sign off <b>' + fmtTime(row.signOff) + '</b></span><span>Breaks <b>' + escapeHtml(br) + '</b></span></div>';
     }
     if(live && live.state !== 'after') html += '<div class="dd-now" style="margin:10px 0 0;">📍 ' + escapeHtml(liveText(live)) + '</div>';
-    d.g.forEach(function(seg){
-      html += '<div class="dd-seg"><div class="dd-seg-head">' + (seg.b ? 'Bus ' + escapeHtml(seg.b) : 'Trips') +
-        (seg.r ? '<span class="dd-route">' + escapeHtml(seg.r) + '</span>' : '') + '</div>';
+    d.g.forEach(function(seg, segIdx){
+      html += '<div class="dd-seg"><div class="dd-seg-head">' + escapeHtml(blockLabel(segIdx, d.g.length)) +
+        (seg.r ? '<span class="dd-route">Route ' + escapeHtml(seg.r) + '</span>' : '') +
+        '</div>';
       seg.s.forEach(function(st){
         if(st.k){
           var target = st.d ? resolveDetail(zone, day, st.d) : null;
@@ -3286,6 +3342,20 @@ if(GARAGE_PACK){(function(){
         if(t){ detailStack.push({ zone:zone, day:day, hit:t, row:null }); renderDutyDetail(); }
       });
     });
+  }
+  function routeCls(r){ return r ? 'rt-' + String(r).replace(/[^A-Za-z0-9]/g,'').toLowerCase() : ''; }
+  var BLOCK_WORDS = ['First','Second','Third','Fourth','Fifth','Sixth'];
+  function blockLabel(i, n){ return (n > 1 ? (BLOCK_WORDS[i] || ('Block ' + (i+1))) + ' Block' : 'Block'); }
+  // Summary like "First Block 27 · Second Block 77A" for a duty, from the trip data
+  function dutyBlocksSummary(duty){
+    try{
+      var info = detailForDuty(duty.dutyNumber, duty.date);
+      if(!info || !info.hit || !info.hit.d || !info.hit.d.g || !info.hit.d.g.length) return '';
+      var g = info.hit.d.g, n = g.length;
+      return g.map(function(seg, i){
+        return '<span class="duty-block"><span class="duty-block-n">' + escapeHtml(blockLabel(i, n)) + '</span> <b>' + escapeHtml(seg.r || '—') + '</b></span>';
+      }).join('');
+    }catch(e){ return ''; }
   }
   function closeDutyDetail(){ detailBackdrop.classList.remove('open'); detailStack = []; }
   document.getElementById('detailCloseBtn').addEventListener('click', closeDutyDetail);
