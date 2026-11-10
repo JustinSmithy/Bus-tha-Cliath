@@ -1809,6 +1809,38 @@
   .ph-copy{ display:block; width:100%; padding:12px; border-radius:12px; background:var(--paper-raised); }
   #payslipResult .dd-open + .dd-open{ margin-top:8px; }
   #payslipResult #saveReviewBtn{ background:var(--paper-raised); color:var(--depot-blue); border:1px solid var(--depot-blue); }
+
+/* ---------- Duty card: collapsible details, shift chip, swipe, nav icons ---------- */
+  .duty-blocks{ margin-top:14px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+  .duty-blocks > summary{ display:flex; align-items:center; gap:8px; padding:11px 12px; cursor:pointer; list-style:none; font-size:13px; font-weight:700; color:var(--text); min-height:44px; }
+  .duty-blocks > summary::-webkit-details-marker{ display:none; }
+  .db-t{ flex:1; }
+  .duty-blocks > summary em{ font-style:normal; font-size:11px; font-weight:700; color:var(--text-secondary); border:1px solid var(--line); background:var(--paper-raised); border-radius:999px; padding:2px 9px; }
+  .duty-blocks > summary em.warn{ color:#1a1a1a; background:var(--amber); border-color:var(--amber); }
+  .db-chev{ width:9px; height:9px; margin:0 4px 3px 2px; border-right:2px solid var(--text-secondary); border-bottom:2px solid var(--text-secondary); transform:rotate(45deg); transition:transform .15s; }
+  .duty-blocks[open] > summary .db-chev{ transform:rotate(-135deg); margin-bottom:-3px; }
+  .duty-blocks[open] > summary{ border-bottom:1px solid var(--line); }
+  .duty-blocks > .timeline-blockinfo{ padding:10px; }
+  .tb-n{ color:var(--text-secondary); opacity:.8; white-space:nowrap; }
+  .shift-chip{ margin-left:auto; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; border-radius:999px; padding:3px 10px 3px 8px; color:var(--sc); background:color-mix(in srgb, var(--sc) 13%, transparent); border:1px solid color-mix(in srgb, var(--sc) 38%, transparent); }
+  .shift-chip svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .shift-early{ --sc:#C77700; } .shift-day{ --sc:#0F7FB0; } .shift-late{ --sc:#8A55D6; } .shift-night{ --sc:#5568D8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .shift-early{ --sc:#FFB300; } :root:not([data-theme="light"]) .shift-day{ --sc:#5FC0EE; } :root:not([data-theme="light"]) .shift-late{ --sc:#B98BFF; } :root:not([data-theme="light"]) .shift-night{ --sc:#8FA0FF; } }
+  :root[data-theme="dark"] .shift-early{ --sc:#FFB300; } :root[data-theme="dark"] .shift-day{ --sc:#5FC0EE; } :root[data-theme="dark"] .shift-late{ --sc:#B98BFF; } :root[data-theme="dark"] .shift-night{ --sc:#8FA0FF; }
+  .duty-extra-actions .dd-open[data-detail-duty]{ min-height:50px; font-size:15px; border-radius:12px; }
+  .swipe-hint{ position:absolute; z-index:0; border-radius:14px; display:flex; align-items:center; padding:0 22px; font-size:14px; font-weight:800; letter-spacing:.02em; color:#fff; pointer-events:none; }
+  .swipe-hint.edit{ background:var(--depot-blue); justify-content:flex-start; }
+  .swipe-hint.del{ background:var(--alert); justify-content:flex-end; }
+  .swipe-hint.ready{ filter:brightness(1.12); }
+  .duty-card{ touch-action:pan-y; }
+  .nav-btn .nav-icon svg{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; display:block; }
+  .nav-btn .nav-icon{ display:flex; align-items:center; justify-content:center; width:50px; height:28px; border-radius:999px; transition:background .15s; }
+  @media (max-width:639px){
+    .nav-btn{ gap:2px; padding:8px 2px 7px; }
+    .nav-btn.active{ border-top-color:transparent; }
+    .nav-btn.active .nav-icon{ background:color-mix(in srgb, var(--amber) 22%, transparent); }
+  }
+  @media (min-width:640px){ .nav-btn .nav-icon{ width:auto; height:auto; } .nav-btn .nav-icon svg{ width:18px; height:18px; } }
 html[data-layout="new"] .stat-card,html[data-layout="new"] .next-duty,html[data-layout="new"] .pay-summary-bar{border-radius:10px;}
 html[data-layout="new"] .add-btn{min-height:48px; border-radius:10px;}
 html[data-layout="new"] .add-row{display:flex; gap:8px;}
@@ -1890,22 +1922,22 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
 
 <nav class="bottom-nav" aria-label="Main">
   <button class="nav-btn active" id="tabMyDuties" type="button" aria-current="page">
-    <span class="nav-icon" aria-hidden="true">🗂️</span><span>My Duties</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M9.5 15.2l1.8 1.8 3.4-3.6"/></svg></span><span>My Duties</span>
   </button>
   <button class="nav-btn" id="tabRoutes" type="button">
-    <span class="nav-icon" aria-hidden="true">🛣️</span><span>Routes</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.8"/></svg></span><span>Routes</span>
   </button>
   <button class="nav-btn" id="tabPay" type="button">
-    <span class="nav-icon" aria-hidden="true">💶</span><span>Pay</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.7a4 4 0 1 0 0 6.6M7.5 11h5.6M7.5 13.3H13"/></svg></span><span>Pay</span>
   </button>
   <button class="nav-btn" id="tabIncidents" type="button">
-    <span class="nav-icon" aria-hidden="true">📋</span><span>Incidents</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4Z"/><path d="M12 10v4.5M12 17.2v.3"/></svg></span><span>Incidents</span>
   </button>
   <button class="nav-btn" id="tabStats" type="button">
-    <span class="nav-icon" aria-hidden="true">👤</span><span>Profile</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6"/></svg></span><span>Profile</span>
   </button>
   <button class="nav-btn" id="tabToilets" type="button">
-    <span class="nav-icon" aria-hidden="true">🚻</span><span>Toilets</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3Z"/></svg></span><span>Toilets</span>
   </button>
 </nav>
 
@@ -1949,7 +1981,7 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
           <div id="pastList"></div>
         </div>
 
-        <p class="storage-note">🔒 Private to you — saved only on this device. Back up from the Profile tab so you don’t lose it.</p>
+        <p class="storage-note">🔒 Private to you — saved only on this device. Back up from the Profile tab so you don’t lose it.<br>Tip: swipe a duty card right to edit it, or left to delete it.</p>
       </section>
 
       <section id="routesView" style="display:none;">
@@ -2949,6 +2981,27 @@ if(GARAGE_PACK){(function(){
     });
   }
 
+  var blocksOpen = {};
+  document.addEventListener('toggle', function(e){
+    var d = e.target; if(d && d.matches && d.matches('details.duty-blocks')) blocksOpen[d.getAttribute('data-blocks-id')] = d.open;
+  }, true);
+  var SHIFT_SVG = {
+    early: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0M12 5v3M5 10l2 2M19 10l-2 2"/></svg>',
+    day:   '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
+    late:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0M12 3v5m0 0-2-2m2 2 2-2M5 10l2 2M19 10l-2 2"/></svg>',
+    night: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>'
+  };
+  function shiftOf(startStr){
+    var m = timeToMinutes(startStr); if(m == null) return null;
+    if(m >= 20 * 60 || m < 4 * 60) return { k: 'night', l: 'Night' };
+    if(m < 10 * 60) return { k: 'early', l: 'Early' };
+    if(m < 13 * 60 + 30) return { k: 'day', l: 'Day' };
+    return { k: 'late', l: 'Late' };
+  }
+  function shiftChipHtml(duty){
+    var sh = shiftOf(duty.start); if(!sh) return '';
+    return '<span class="shift-chip shift-' + sh.k + '">' + SHIFT_SVG[sh.k] + sh.l + '</span>';
+  }
   function dutyCardHtml(duty, isPast){
     var tag = isPast ? null : dayTag(duty.date);
     var span = dutySpanMinutes(duty);
@@ -3044,7 +3097,11 @@ if(GARAGE_PACK){(function(){
               autoAlertsFor(seg.r, duty.date).forEach(function(a){ if(_shownA.indexOf(a.t) < 0){ _shownA.push(a.t); alertsHtml += alertHtml(a, seg.r); } });
               _parts.push('<div class="tb-card ' + routeCls(seg.r) + ' ' + (_bst[i] || '') + '">' +
                 '<div class="tb-head"><b class="tb-route">' + escapeHtml(seg.r || '') + '</b><span class="tb-time">' + escapeHtml(ddTime(ft[0].t)) + ' – ' + escapeHtml(ddTime(ft[1].t)) + '</span>' + (_bst[i] === 'is-now' ? '<span class="tb-now">NOW</span>' : '') + '</div>' +
-                (stops.length ? '<div class="tb-stops">' + stops.map(escapeHtml).join(' → ') + '</div>' : '') +
+                (stops.length ? '<div class="tb-stops">' + (function(){
+                  var u = []; stops.forEach(function(x){ if(u.indexOf(x) < 0) u.push(x); });
+                  if(u.length <= 4) return u.map(escapeHtml).join(' \u2192 ');
+                  return escapeHtml(u[0]) + ' \u2192 \u2026 \u2192 ' + escapeHtml(u[u.length-1]) + ' <span class="tb-n">\u00b7 ' + u.length + ' stops</span>';
+                })() + '</div>' : '') +
                 (tags ? '<div class="tb-tags">' + tags + '</div>' : '') +
                 alertsHtml +
               '</div>');
@@ -3093,7 +3150,7 @@ if(GARAGE_PACK){(function(){
           '</button>' +
         '</div>' +
       '</div>' +
-      (routeTxt ? '<div class="duty-route">'+(routeChipsHtml || escapeHtml(routeTxt))+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span></div>' : '')) +
+      (routeTxt ? '<div class="duty-route">'+(routeChipsHtml || escapeHtml(routeTxt))+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+shiftChipHtml(duty)+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span>'+shiftChipHtml(duty)+'</div>' : '<div class="duty-route">'+shiftChipHtml(duty)+'</div>')) +
       '<div class="duty-times">' +
         '<div><span class="t-label">Sign on</span><span class="t-value">'+fmtTime(duty.start)+'</span></div>' +
         '<div><span class="t-label">Sign off</span><span class="t-value">'+fmtTime(duty.end)+'</span></div>' +
@@ -3106,9 +3163,15 @@ if(GARAGE_PACK){(function(){
           breakBlocksHtml +
           nowMarkerHtml +
         '</div>' +
-        blockInfoHtml +
         '<div class="timeline-labels"><span>'+fmtTime(duty.start)+'</span><span>'+fmtTime(duty.end)+'</span></div>' +
       '</div>' +
+      (function(){
+        if(!blockInfoHtml) return '';
+        var nb = (blockInfoHtml.match(/class="tb-card /g) || []).length, nn = dutyNoticeCount(duty);
+        var open = (duty.id in blocksOpen) ? blocksOpen[duty.id] : (!isPast && tag === 'TODAY');
+        return '<details class="duty-blocks" data-blocks-id="' + escapeAttr(duty.id) + '"' + (open ? ' open' : '') + '><summary><span class="db-t">' + (nb ? 'Route details' : 'Service notices') + '</span>' +
+          (nb ? '<em>' + nb + (nb === 1 ? ' block' : ' blocks') + '</em>' : '') + (nn ? '<em class="warn">\u26A0 ' + nn + '</em>' : '') + '<i class="db-chev" aria-hidden="true"></i></summary>' + blockInfoHtml + '</details>';
+      })() +
       (breaks.length ? '<div class="break-list">'+breakRowsHtml+'</div>' : '') +
       nextBreakHtml +
       payEstimateHtml(duty) +
@@ -4478,6 +4541,62 @@ if(GARAGE_PACK){(function(){
     saveDuties();
     render();
   }
+
+  // ---- Swipe a duty card: right = edit, left = delete (with confirmation) ----
+  (function(){
+    var card = null, sx = 0, sy = 0, dx = 0, locked = null, hint = null, TH = 96;
+    function dutyIdOf(c){ var e = c.querySelector('[data-edit]'); return e ? e.getAttribute('data-edit') : null; }
+    function makeHint(c){
+      var par = c.parentNode; if(!par) return;
+      if(getComputedStyle(par).position === 'static'){ par.style.position = 'relative'; par._sw = true; }
+      hint = document.createElement('div'); hint.className = 'swipe-hint';
+      hint.style.cssText = 'top:' + c.offsetTop + 'px;left:' + c.offsetLeft + 'px;width:' + c.offsetWidth + 'px;height:' + c.offsetHeight + 'px;';
+      par.insertBefore(hint, c); c.style.position = 'relative'; c.style.zIndex = '1';
+    }
+    function updateHint(){
+      if(!hint) return; var p = Math.min(1, Math.abs(dx) / TH);
+      hint.className = 'swipe-hint ' + (dx > 0 ? 'edit' : 'del') + (p >= 1 ? ' ready' : '');
+      hint.style.opacity = String(0.25 + 0.75 * p);
+      hint.textContent = dx > 0 ? '✎  Edit' : 'Delete  ✕';
+    }
+    function cleanup(c){
+      if(hint){ var par = hint.parentNode; if(par && par._sw){ par.style.position = ''; par._sw = false; } hint.remove(); hint = null; }
+      if(c){ c.style.transition = 'transform .2s'; c.style.transform = ''; setTimeout(function(){ c.style.position = ''; c.style.zIndex = ''; c.style.transition = ''; }, 220); }
+    }
+    document.addEventListener('touchstart', function(e){
+      if(e.touches.length !== 1){ card = null; return; }
+      var c = e.target.closest && e.target.closest('#upcomingList .duty-card, #pastList .duty-card');
+      if(!c || (e.target.closest && e.target.closest('input,select,textarea,details[open] .al-body'))){ card = null; return; }
+      card = c; sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; locked = null;
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e){
+      if(!card) return;
+      var t = e.touches[0], mx = t.clientX - sx, my = t.clientY - sy;
+      if(locked === null){
+        if(Math.abs(mx) > 12 && Math.abs(mx) > Math.abs(my) * 1.6){ locked = true; makeHint(card); }
+        else if(Math.abs(my) > 10){ locked = false; card = null; return; }
+        else return;
+      }
+      if(!locked) return;
+      e.preventDefault();
+      dx = Math.max(-150, Math.min(150, mx));
+      card.style.transition = 'none'; card.style.transform = 'translateX(' + dx + 'px)';
+      updateHint();
+    }, { passive: false });
+    document.addEventListener('touchend', function(){
+      if(!card) return; var c = card, d = dx, was = locked; card = null;
+      if(!was) return;
+      cleanup(c);
+      var id = dutyIdOf(c); if(!id) return;
+      if(d >= TH) openEdit(id);
+      else if(d <= -TH){
+        var duty = duties.filter(function(x){ return x.id === id; })[0];
+        window.a11yDialog({ title: 'Delete this duty?', message: (duty ? 'Duty ' + (duty.dutyNumber || '—') + ' on ' + fmtDateDisplay(duty.date) + ' will be removed. This can’t be undone.' : 'This duty will be removed.'),
+          buttons: [{ label: 'Cancel', value: 'cancel' }, { label: 'Delete', value: 'delete', primary: true }] }, function(val){ if(val === 'delete') deleteDuty(id); });
+      }
+    });
+    document.addEventListener('touchcancel', function(){ if(card && locked){ cleanup(card); } card = null; });
+  })();
 
   // refresh the "now" marker / next-break flag periodically
   setInterval(render, 60000);
