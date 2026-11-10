@@ -34,7 +34,6 @@
     --alert:#B23A2E;
     --good:#2F7D4F;
     --board-black:#15181B;
-    --board-black-alt:#1F2327;
     --radius-card: 3px;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-body: 'Public Sans', sans-serif;
@@ -305,17 +304,37 @@
     font-size:12px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.6);
     pointer-events:none;
   }
-  .timeline-blockinfo{ display:flex; flex-direction:column; gap:3px; margin-top:8px; font-size:12.5px; }
-  .timeline-blockinfo .tb-blk{ font-family:var(--font-mono); color:var(--text); }
-  .timeline-blockinfo .tb-blk b{ background:var(--depot-blue); color:#fff; border-radius:2px; padding:0 6px; margin-right:4px; }
-  .timeline-blockinfo .tb-path{ display:block; font-family:var(--font-body); font-size:12px; color:var(--text-secondary); margin:1px 0 3px 2px; }
-  .timeline-blockinfo .tb-ph{ display:block; font-size:12px; font-weight:600; color:var(--text); margin:0 0 2px 2px; }
-  .timeline-blockinfo .tb-ph::before{ content:'⇄ '; color:var(--amber-dim); }
+  .timeline-blockinfo{ display:flex; flex-direction:column; gap:8px; margin-top:12px; font-size:13px; }
+  .tb-card{ border:1px solid var(--line); border-left:4px solid var(--rc, var(--depot-blue)); border-radius:8px; background:var(--paper); padding:9px 12px 10px; }
+  .tb-head{ display:flex; align-items:center; gap:10px; }
+  .tb-route{ background:var(--rc, var(--depot-blue)); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:700; padding:2px 8px; border-radius:4px; }
+  .tb-time{ font-family:var(--font-mono); font-size:15px; font-weight:700; color:var(--text); }
+  .tb-stops{ margin-top:6px; font-size:12.5px; line-height:1.45; color:var(--text-secondary); }
+  .tb-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .tb-tag{ font-size:11.5px; font-weight:600; color:var(--text); border:1px solid var(--line); border-radius:999px; padding:2px 9px; background:var(--paper-raised, transparent); }
+  .tb-tag.tb-fleet{ font:inherit; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--text-secondary); border-style:dashed; background:none; }
+  .tb-tag.tb-fleet.has{ color:var(--text); border-style:solid; background:var(--paper-raised, transparent); }
+  .tb-card .tb-info.has{ margin:8px 0 0; }
+  .tb-card{ transition:opacity .2s; }
+  .tb-card.is-done{ opacity:.5; }
+  .tb-card.is-now{ border-color:var(--rc, var(--depot-blue)); box-shadow:0 0 0 1px var(--rc, var(--depot-blue)), 0 2px 14px rgba(0,0,0,.25); }
+  .tb-now{ margin-left:auto; font-size:10.5px; font-weight:800; letter-spacing:.08em; color:#1a1a1a; background:var(--amber); padding:2px 8px; border-radius:999px; }
+  .tb-break.is-now{ color:var(--text); }
+  .tb-break.is-now span::before{ box-shadow:0 0 0 3px rgba(255,184,28,.35); }
+  .tb-break{ display:flex; align-items:center; gap:10px; font-size:12px; font-weight:700; color:var(--text-secondary); }
+  .tb-break::before, .tb-break::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .tb-break span{ display:inline-flex; align-items:center; gap:6px; }
+  .tb-break span::before{ content:''; width:9px; height:9px; border-radius:2px; background:var(--amber); }
   .rt-27{ --rc:#1F5FAD; } .rt-77a{ --rc:#1B8CB8; } .rt-56a{ --rc:#4A55B8; }
   .timeline-blocklabel{ background:repeating-linear-gradient(135deg, var(--rc, var(--depot-blue)) 0 8px, rgba(0,0,0,.18) 8px 16px); }
-  .timeline-blockinfo .tb-blk b{ background:var(--rc, var(--depot-blue)); }
-  .timeline-blockinfo .tb-brk{ font-weight:600; color:var(--text-secondary); padding-left:2px; }
-  .timeline-blockinfo .tb-brk::before{ content:''; display:inline-block; width:10px; height:10px; background:var(--amber); border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .timeline-blockinfo .tb-info{ display:block; text-align:left; font:inherit; font-size:12px; color:var(--text-secondary); background:none; border:0; padding:2px 0 3px 2px; cursor:pointer; }
+  .timeline-blockinfo .tb-info.has{ color:var(--text); font-weight:600; background:rgba(255,184,28,.12); border-left:3px solid var(--amber); padding:4px 8px; border-radius:0 4px 4px 0; margin:2px 0 4px; width:100%; }
+  .timeline-blockinfo .tb-info.auto{ cursor:default; }
+  .timeline-blockinfo details.auto-alert{ box-sizing:border-box; }
+  .timeline-blockinfo details.auto-alert summary{ cursor:pointer; list-style:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .timeline-blockinfo details.auto-alert summary::-webkit-details-marker{ display:none; }
+  .timeline-blockinfo details.auto-alert[open] summary{ white-space:normal; }
+  .timeline-blockinfo details.auto-alert .auto-body{ font-weight:400; font-size:12px; color:var(--text-secondary); margin-top:4px; line-height:1.4; }
   .timeline-break{
     z-index:2;
     position:absolute;
@@ -410,27 +429,40 @@
   .duty-extra-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
   .duty-extra-actions .dd-open{ margin-top:0; }
   .bh-hint{ font-size:12px; color:var(--amber-dim); font-weight:600; margin-top:6px; }
-  .duty-blocks{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 2px; }
-  .duty-block{ font-size:12.5px; border:1px solid var(--line); border-radius:var(--radius-card); padding:2px 8px; background:var(--paper); }
-  .duty-block-n{ color:var(--text-secondary); }
-  .duty-block b{ font-family:var(--font-mono); color:var(--text); }
   /* ---------- Duty trip details ---------- */
   .dd-head{ margin-bottom:12px; }
-  .dd-sub{ font-size:12.5px; color:var(--text-secondary); margin-top:2px; }
-  .dd-meta{ display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; margin:10px 0 4px; }
-  .dd-meta b{ font-family:var(--font-mono); font-weight:600; }
-  .dd-seg{ border:1px solid var(--line); border-radius:var(--radius-card); margin-top:12px; overflow:hidden; background:var(--paper); }
-  .dd-seg-head{ display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--board-black); color:#fff; font-weight:700; font-size:13px; letter-spacing:.02em; }
-  .dd-route{ background:var(--amber); color:#1A1D21; border-radius:2px; padding:1px 7px; font-family:var(--font-mono); font-size:12px; font-weight:700; }
-  .dd-stop{ display:flex; align-items:baseline; gap:12px; padding:8px 12px; border-top:1px solid var(--line-soft); font-size:14px; }
-  .dd-stop:first-of-type{ border-top:none; }
-  .dd-time{ font-family:var(--font-mono); font-weight:600; min-width:64px; color:var(--depot-blue); }
-  .dd-loc{ flex:1; }
-  .dd-tag{ font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-secondary); border:1px solid var(--line); border-radius:2px; padding:0 5px; margin-left:4px; }
-  .dd-note{ padding:7px 12px; border-top:1px solid var(--line-soft); font-size:12.5px; font-style:italic; color:var(--text-secondary); }
-  .dd-link{ display:block; width:100%; text-align:left; border:none; border-top:1px solid var(--line-soft); background:rgba(255,179,0,.14); color:var(--text); font:inherit; font-size:13.5px; font-weight:600; padding:9px 12px; cursor:pointer; }
+  .dd-title{ font-size:24px; font-weight:800; letter-spacing:-.01em; line-height:1.1; }
+  .dd-sub{ font-size:12.5px; color:var(--text-secondary); margin-top:4px; }
+  .dd-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:0 0 4px; }
+  .dd-stats > div{ border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:var(--paper); }
+  .dd-stats span{ display:block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); }
+  .dd-stats b{ display:block; margin-top:2px; font-family:var(--font-mono); font-size:15px; font-weight:700; line-height:1.3; }
+  .dd-seg{ border:1px solid var(--line); border-left:4px solid var(--rc, var(--depot-blue)); border-radius:8px; margin-top:14px; overflow:hidden; background:var(--paper); }
+  .dd-seg-head{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line-soft); }
+  .dd-route{ background:var(--rc, var(--depot-blue)); color:#fff; border-radius:4px; padding:2px 9px; font-family:var(--font-mono); font-size:13px; font-weight:700; }
+  .dd-blk{ font-size:12.5px; font-weight:600; color:var(--text-secondary); }
+  .dd-range{ margin-left:auto; font-family:var(--font-mono); font-size:14px; font-weight:700; color:var(--text); }
+  .dd-stops{ padding:6px 0; }
+  .dd-stop{ position:relative; display:grid; grid-template-columns:56px 14px 1fr; align-items:center; column-gap:10px; padding:8px 12px; font-size:14px; }
+  .dd-stop::before{ content:''; position:absolute; left:calc(12px + 56px + 10px + 6px); top:0; bottom:0; width:2px; background:var(--line); }
+  .dd-stop.dd-first::before{ top:50%; }
+  .dd-stop.dd-last::before{ bottom:50%; }
+  .dd-stop.dd-first.dd-last::before{ display:none; }
+  .dd-time{ font-family:var(--font-mono); font-weight:700; color:var(--text); }
+  .dd-dot{ position:relative; z-index:1; width:12px; height:12px; box-sizing:border-box; border-radius:50%; border:3px solid var(--rc, var(--depot-blue)); background:var(--paper); }
+  .dd-stop.dd-next .dd-dot{ background:var(--amber); border-color:var(--amber); box-shadow:0 0 0 4px rgba(255,179,0,.3); }
+  .dd-loc{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; font-weight:500; }
+  .dd-tag{ font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--text-secondary); border:1px solid var(--line); border-radius:999px; padding:0 7px; }
+  .dd-tag.dd-nexttag{ border-color:var(--amber); color:var(--text); background:rgba(255,179,0,.2); }
+  .dd-note{ margin:2px 12px; padding:6px 10px; font-size:12.5px; font-style:italic; color:var(--text-secondary); background:var(--line-soft); border-radius:6px; }
+  .dd-link{ display:flex; align-items:center; justify-content:space-between; width:calc(100% - 24px); margin:4px 12px; text-align:left; border:1px solid rgba(255,179,0,.45); border-radius:999px; background:rgba(255,179,0,.14); color:var(--text); font:inherit; font-size:13px; font-weight:700; padding:7px 14px; cursor:pointer; box-sizing:border-box; }
   .dd-link.static{ cursor:default; }
   .dd-link:not(.static):hover{ background:rgba(255,179,0,.26); }
+  .dd-chev{ font-size:18px; line-height:1; color:var(--text-secondary); }
+  .dd-break{ display:flex; align-items:center; gap:10px; margin:12px 4px 0; font-size:12px; font-weight:700; color:var(--text-secondary); }
+  .dd-break::before, .dd-break::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .dd-break span{ display:inline-flex; align-items:center; gap:6px; }
+  .dd-break span::before{ content:''; width:9px; height:9px; border-radius:2px; background:var(--amber); }
   .dd-foot{ font-size:12px; color:var(--text-secondary); margin:12px 0 0; }
   .dd-now{ background:rgba(255,179,0,.16); border-left:3px solid var(--amber); padding:8px 10px; font-size:13px; font-weight:600; margin-top:10px; border-radius:2px; }
   .dd-stop.dd-past{ opacity:.45; }
@@ -890,6 +922,14 @@
   .ot-quick{ max-width:360px; }
   .ot-quick .ot-sub{ margin:0 0 14px; }
   .oq-breaks{ margin:0 0 12px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
+  .oq-stepper{ display:flex; align-items:center; justify-content:center; gap:18px; margin:4px 0 14px; }
+  .oq-step{ width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:var(--paper); color:var(--text); font-size:24px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .oq-step:active{ transform:scale(.94); } .oq-step:disabled{ opacity:.35; cursor:default; }
+  .oq-display{ min-width:110px; text-align:center; font-family:var(--font-mono); font-size:30px; font-weight:700; color:var(--text); }
+  .oq-chips{ display:flex; justify-content:center; gap:8px; margin:0 0 16px; }
+  .oq-chip{ font:inherit; font-size:13px; font-weight:600; padding:7px 14px; border-radius:var(--radius-card); border:1px solid var(--line); background:var(--paper); color:var(--text); cursor:pointer; }
+  .oq-chip.oq-clear{ color:var(--text-secondary); font-weight:500; }
+  .ot-quick .ot-sub{ text-align:center; }
   .oq-breaks-title{ font-size:12.5px; font-weight:600; color:var(--text-secondary); }
   .oq-breaks .break-worked{ margin:8px 0 0; color:var(--text); }
   .ot-tag{ color:var(--ot-text); font-weight:700; }
@@ -1478,6 +1518,32 @@
   .qr-status{ font-size:14px; font-weight:600; color:var(--text) !important; min-height:20px; }
 
   /* ---------- Layout 2 (New) styles, scoped ---------- */
+/* ---------- Duty card redesign (route chips, time tiles, action grid) ---------- */
+  .duty-card{ padding:16px; border-radius:14px; }
+  .duty-number{ font-size:28px; letter-spacing:-.01em; }
+  .duty-signon{ border-radius:999px; padding:3px 10px; }
+  .duty-daytag{ border-radius:999px; padding:2px 10px; }
+  .icon-btn{ width:34px; height:34px; border-radius:10px; }
+  .duty-route{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px; }
+  .dr-lbl{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); }
+  .dr-chip{ background:var(--rc, var(--depot-blue)); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:700; padding:2px 9px; border-radius:5px; }
+  .dr-arrow{ color:var(--text-secondary); font-size:13px; }
+  .duty-times{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .duty-times > div{ border:1px solid var(--line); background:var(--paper); border-radius:10px; padding:9px 11px; }
+  .duty-times .t-label{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+  .duty-times .t-value{ font-size:20px; font-weight:700; }
+  .break-row{ border:1px solid var(--line); border-radius:10px; padding:8px 12px; }
+  .break-swatch{ width:9px; height:9px; border-radius:2px; }
+  .next-break-flag{ margin-top:12px; padding:8px 12px; border-radius:10px; background:color-mix(in srgb, currentColor 12%, transparent); border:1px solid color-mix(in srgb, currentColor 35%, transparent); }
+  .duty-pay-est{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:12px; padding:10px 12px; border-radius:10px; background:var(--paper); border:1px solid var(--line); color:var(--text); }
+  .duty-pay-est.muted{ display:block; font-size:12.5px; }
+  .dpe-lbl{ font-size:12.5px; font-weight:500; color:var(--text-secondary); line-height:1.35; }
+  .dpe-amt{ font-family:var(--font-mono); font-size:19px; font-weight:700; color:var(--good); white-space:nowrap; }
+  .duty-extra-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
+  .duty-extra-actions .dd-open{ display:flex; align-items:center; justify-content:center; width:100%; margin-top:0; padding:10px 12px; border-radius:10px; text-align:center; }
+  .duty-extra-actions .dd-open[data-detail-duty]{ grid-column:1 / -1; background:var(--depot-blue); border-color:var(--depot-blue); color:#fff; font-size:14px; }
+  .duty-toilets{ margin-top:14px; padding-top:12px; }
+  .dt-item{ border-radius:999px; padding:4px 11px; }
 html[data-layout="new"] .stat-card,html[data-layout="new"] .next-duty,html[data-layout="new"] .pay-summary-bar{border-radius:10px;}
 html[data-layout="new"] .add-btn{min-height:48px; border-radius:10px;}
 html[data-layout="new"] .add-row{display:flex; gap:8px;}
@@ -1937,9 +2003,17 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
   <div class="modal ot-quick" role="dialog" aria-modal="true" aria-labelledby="otQuickTitle">
     <h3 id="otQuickTitle">Overtime</h3>
     <div class="ot-sub" id="otQuickSub"></div>
-    <div class="row2">
-      <div class="field"><label for="oq-h">Hours</label><input type="number" id="oq-h" min="0" max="24" step="1" inputmode="numeric" placeholder="0"></div>
-      <div class="field"><label for="oq-m">Minutes</label><input type="number" id="oq-m" min="0" max="59" step="1" inputmode="numeric" placeholder="0"></div>
+    <input type="hidden" id="oq-h"><input type="hidden" id="oq-m">
+    <div class="oq-stepper">
+      <button type="button" class="oq-step" id="oqMinus" aria-label="Less overtime">−</button>
+      <div class="oq-display" id="oqDisplay" aria-live="polite">0h 00m</div>
+      <button type="button" class="oq-step" id="oqPlus" aria-label="More overtime">+</button>
+    </div>
+    <div class="oq-chips">
+      <button type="button" class="oq-chip" data-oq-add="15">+15m</button>
+      <button type="button" class="oq-chip" data-oq-add="30">+30m</button>
+      <button type="button" class="oq-chip" data-oq-add="60">+1h</button>
+      <button type="button" class="oq-chip oq-clear" data-oq-add="0">Clear</button>
     </div>
     <div class="oq-breaks" id="oqBreaks" hidden>
       <div class="oq-breaks-title">Worked through a break?</div>
@@ -1949,6 +2023,20 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
     <div class="modal-actions">
       <button type="button" class="btn-secondary" id="oqCancel">Cancel</button>
       <button type="button" class="btn-primary" id="oqSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fleet number -->
+<div class="modal-backdrop" id="flBackdrop">
+  <div class="modal ot-quick" role="dialog" aria-modal="true" aria-labelledby="flTitle">
+    <h3 id="flTitle">Bus fleet number</h3>
+    <div class="ot-sub" id="flSub"></div>
+    <div class="field"><label for="flInput">Fleet number</label><input type="text" id="flInput" maxlength="12" autocomplete="off" autocapitalize="characters" placeholder="e.g. SG123"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="flClear">Clear</button>
+      <button type="button" class="btn-secondary" id="flCancel">Cancel</button>
+      <button type="button" class="btn-primary" id="flSave">Save</button>
     </div>
   </div>
 </div>
@@ -2138,8 +2226,6 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       <button type="button" class="btn-primary" id="saveIncidentBtn">Save incident</button>
     </div>
   </div>
-</div>
-
 </div>
 
 <script>
@@ -2567,7 +2653,6 @@ if(GARAGE_PACK){(function(){
     var breakBlocksHtml = '';
     var brkSpans = [];
     var breakRowsHtml = '';
-    var totalBreakMins = 0;
 
     breaks.forEach(function(b){
       var bs = timeToMinutes(b.start), be = timeToMinutes(b.end);
@@ -2576,7 +2661,6 @@ if(GARAGE_PACK){(function(){
       var relEnd = be - startMins; if(relEnd < 0) relEnd += 1440;
       if(relEnd < relStart) relEnd += 1440;
       var dur = relEnd - relStart;
-      totalBreakMins += dur;
       brkSpans.push([relStart, Math.min(span, relStart + dur)]);
       var leftPct = Math.max(0, Math.min(100, (relStart/span)*100));
       var widthPct = Math.max(0.8, Math.min(100-leftPct, (dur/span)*100));
@@ -2591,41 +2675,44 @@ if(GARAGE_PACK){(function(){
     // now-marker only for today's duties
     var nowMarkerHtml = '';
     var nextBreakHtml = '';
+    var relNowV = null, nbInfo = null;
     if(!isPast && dayTag(duty.date) === 'TODAY' && startMins != null && span > 0){
       var now = new Date();
       var nowMins = now.getHours()*60 + now.getMinutes();
       var relNow = nowMins - startMins; if(relNow < 0) relNow += 1440;
+      var _raw = nowMins - startMins; if(_raw < 0 && _raw + 1440 <= span) _raw += 1440;
+      relNowV = _raw >= 0 ? _raw : null;   // minutes since sign on (null = duty hasn't started yet today)
       if(relNow >= 0 && relNow <= span){
         var pct = (relNow/span)*100;
         nowMarkerHtml = '<div class="timeline-now" style="left:'+pct.toFixed(2)+'%;"></div>';
       }
-      // find next upcoming break today
-      var upcomingBreak = null;
-      breaks.forEach(function(b){
-        var bs = timeToMinutes(b.start);
+      // find the break we're on, or the next one today
+      var upcomingBreak = null, onBreakIdx = -1;
+      breaks.forEach(function(b, bi){
+        var bs = timeToMinutes(b.start), be = timeToMinutes(b.end);
         var rel = bs - startMins; if(rel < 0) rel += 1440;
-        if(rel >= relNow && !upcomingBreak) upcomingBreak = { b:b, rel:rel };
+        var relE = be - startMins; if(relE < 0) relE += 1440; if(relE < rel) relE += 1440;
+        if(rel <= relNow && relNow < relE && onBreakIdx < 0) onBreakIdx = bi;
+        if(rel >= relNow && !upcomingBreak) upcomingBreak = { b:b, rel:rel, idx:bi };
       });
-      if(upcomingBreak){
-        var mins_until = upcomingBreak.rel - relNow;
-        var due = mins_until <= 15;
-        nextBreakHtml = '<div class="next-break-flag'+(due?' due':'')+'">' +
-          (due ? 'Break coming up: ' : 'Next break: ') + fmtTime(upcomingBreak.b.start) +
-          (mins_until > 0 ? ' (in ' + fmtDuration(mins_until) + ')' : ' (now)') +
-          '</div>';
-      } else if(breaks.length){
-        nextBreakHtml = '<div class="next-break-flag">No more breaks scheduled today</div>';
-      }
+      nbInfo = onBreakIdx >= 0 ? { state:'on', idx:onBreakIdx, b:breaks[onBreakIdx] }
+             : upcomingBreak ? { state:'next', idx:upcomingBreak.idx, b:upcomingBreak.b, mins:upcomingBreak.rel - relNow }
+             : breaks.length ? { state:'none' } : null;
     }
 
-    var blockBarHtml = '', blockInfoHtml = '', routeTxt = duty.route || '';
+    var blockBarHtml = '', blockInfoHtml = '', routeTxt = duty.route || '', _nbLoc = '', routeChipsHtml = '';
     try{
       var _info = detailForDuty(duty.dutyNumber, duty.date);
       var _g = (_info && _info.hit && _info.hit.d && _info.hit.d.g) || [];
-      var _cuts = [0]; brkSpans.sort(function(a,b){return a[0]-b[0];});
+      brkSpans.sort(function(a,b){return a[0]-b[0];});
       var _segs = [], _pos = 0;
       brkSpans.forEach(function(b){ if(b[0] > _pos) _segs.push([_pos, b[0]]); _pos = Math.max(_pos, b[1]); });
       if(_pos < span) _segs.push([_pos, span]);
+      var _bst = _segs.map(function(sg){ if(relNowV == null) return ''; if(relNowV >= sg[1]) return 'is-done'; if(relNowV >= sg[0]) return 'is-now'; return ''; });
+      if(nbInfo && nbInfo.idx != null && _g.length === _segs.length && _g[nbInfo.idx]){
+        var _lt = (_g[nbInfo.idx].s || []).filter(function(x){ return x.t && x.l; });
+        if(_lt.length) _nbLoc = _lt[_lt.length-1].l;
+      }
       _segs.forEach(function(sg, i){
         var l = (sg[0]/span)*100, w = ((sg[1]-sg[0])/span)*100;
         var lab = (_g.length === _segs.length && _g[i] && _g[i].r) ? _g[i].r : (_g[0] && _g[0].r) || '';
@@ -2633,19 +2720,53 @@ if(GARAGE_PACK){(function(){
       });
       if(_g.length){
         var _rs = []; _g.forEach(function(x){ if(x.r && _rs.indexOf(x.r) < 0) _rs.push(x.r); });
-        if(_rs.length) routeTxt = 'Route ' + _rs.join(' → ');
+        if(_rs.length){
+          routeTxt = 'Route ' + _rs.join(' → ');
+          routeChipsHtml = '<span class="dr-lbl">' + (_rs.length > 1 ? 'Routes' : 'Route') + '</span>' + _rs.map(function(r){ return '<b class="dr-chip ' + routeCls(r) + '">' + escapeHtml(r) + '</b>'; }).join('<span class="dr-arrow">→</span>');
+        }
         if(_g.length === _segs.length){
           var _tm = function(seg){ var t = (seg.s||[]).filter(function(x){ return x.t; }); return t.length ? [t[0], t[t.length-1]] : null; };
-          var _parts = [];
+          var _parts = [], _shownA = [];
           _g.forEach(function(seg, i){
             var ft = _tm(seg);
-            if(ft) _parts.push('<span class="tb-blk"><b class="' + routeCls(seg.r) + '">' + escapeHtml(seg.r || '') + '</b> ' + escapeHtml(ddTime(ft[0].t)) + '–' + escapeHtml(ddTime(ft[1].t)) + '<span class="tb-path">' + (function(){ var out = []; (seg.s||[]).forEach(function(x){ if(x.t && x.l && out[out.length-1] !== x.l) out.push(x.l); }); return out.map(escapeHtml).join(' → '); })() + '</span>' + (function(){ var h = ''; (seg.s||[]).forEach(function(x){ if(x.k){ h += '<span class="tb-ph">' + (x.k === 'p' ? 'Pick up' : 'Hand over') + (x.d ? (x.k === 'p' ? ' off Duty ' : ' to Duty ') + escapeHtml(x.d) : '') + '</span>'; } }); return h; })() + '</span>');
-            if(i < _g.length-1 && ft) _parts.push('<span class="tb-brk">Break ' + escapeHtml(ft[1].l || '') + '</span>');
+            if(ft){
+              var stops = []; (seg.s||[]).forEach(function(x){ if(x.t && x.l && stops[stops.length-1] !== x.l) stops.push(x.l); });
+              var _fl = (duty.blockFleet && duty.blockFleet[i]) || '';
+              var tags = '<button type="button" class="tb-tag tb-fleet' + (_fl ? ' has' : '') + '" data-fleet-duty="' + escapeAttr(duty.id) + '" data-fleet-block="' + i + '">' + (_fl ? '\ud83d\ude8c Fleet ' + escapeHtml(_fl) : '+ Fleet no.') + '</button>'; (seg.s||[]).forEach(function(x){ if(x.k){ tags += '<span class="tb-tag">' + (x.k === 'p' ? 'Pick up' : 'Hand over') + (x.d ? (x.k === 'p' ? ' off Duty ' : ' to Duty ') + escapeHtml(x.d) : '') + '</span>'; } });
+              var alertsHtml = '';
+              autoAlertsFor(seg.r, duty.date).forEach(function(a){ if(_shownA.indexOf(a.t) < 0){ _shownA.push(a.t); alertsHtml += alertHtml(a); } });
+              _parts.push('<div class="tb-card ' + routeCls(seg.r) + ' ' + (_bst[i] || '') + '">' +
+                '<div class="tb-head"><b class="tb-route">' + escapeHtml(seg.r || '') + '</b><span class="tb-time">' + escapeHtml(ddTime(ft[0].t)) + ' – ' + escapeHtml(ddTime(ft[1].t)) + '</span>' + (_bst[i] === 'is-now' ? '<span class="tb-now">NOW</span>' : '') + '</div>' +
+                (stops.length ? '<div class="tb-stops">' + stops.map(escapeHtml).join(' → ') + '</div>' : '') +
+                (tags ? '<div class="tb-tags">' + tags + '</div>' : '') +
+                alertsHtml +
+              '</div>');
+              if(i < _g.length-1) _parts.push('<div class="tb-break' + ((_bst[i] === 'is-done' && !_bst[i+1]) ? ' is-now' : '') + '"><span>Break' + (ft[1].l ? ' · ' + escapeHtml(ft[1].l) : '') + '</span></div>');
+            }
           });
           blockInfoHtml = '<div class="timeline-blockinfo">' + _parts.join('') + '</div>';
         }
       }
-    }catch(e){ blockBarHtml = ''; blockInfoHtml = ''; routeTxt = duty.route || ''; }
+      // Fallback: duty has no trip data (e.g. added by hand) - use the route typed on the duty
+      if(!blockInfoHtml && duty.route){
+        var _seen = [], _fb = [];
+        String(duty.route).split(/[^A-Za-z0-9]+/).filter(Boolean).forEach(function(rt){
+          autoAlertsFor(rt, duty.date).forEach(function(a){ if(_seen.indexOf(a.t) < 0){ _seen.push(a.t); _fb.push(alertHtml(a)); } });
+        });
+        if(_fb.length) blockInfoHtml = '<div class="timeline-blockinfo">' + _fb.join('') + '</div>';
+      }
+    }catch(e){ blockBarHtml = ''; blockInfoHtml = ''; routeTxt = duty.route || ''; routeChipsHtml = ''; }
+    if(nbInfo){
+      var _loc = _nbLoc || (nbInfo.b && nbInfo.b.label) || '';
+      if(nbInfo.state === 'none'){
+        nextBreakHtml = '<div class="next-break-flag">No more breaks scheduled today</div>';
+      } else if(nbInfo.state === 'on'){
+        nextBreakHtml = '<div class="next-break-flag">On break until ' + fmtTime(nbInfo.b.end) + (_loc ? ' · ' + escapeHtml(_loc) : '') + '</div>';
+      } else {
+        var _due = nbInfo.mins <= 15;
+        nextBreakHtml = '<div class="next-break-flag' + (_due ? ' due' : '') + '">Break ' + (nbInfo.mins > 0 ? 'in ' + fmtDuration(nbInfo.mins) : 'now') + (_loc ? ' at ' + escapeHtml(_loc) : '') + '</div>';
+      }
+    }
     return '' +
     '<div class="duty-card'+(isPast?' past':'')+(tag==='TODAY'?' today':'')+'">' +
       '<div class="duty-top">' +
@@ -2664,7 +2785,7 @@ if(GARAGE_PACK){(function(){
           '</button>' +
         '</div>' +
       '</div>' +
-      (routeTxt ? '<div class="duty-route">'+escapeHtml(routeTxt)+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span></div>' : '')) +
+      (routeTxt ? '<div class="duty-route">'+(routeChipsHtml || escapeHtml(routeTxt))+(duty.direction ? ' <span class="duty-direction">· '+escapeHtml(duty.direction)+'</span>' : '')+'</div>' : (duty.direction ? '<div class="duty-route"><span class="duty-direction">'+escapeHtml(duty.direction)+'</span></div>' : '')) +
       '<div class="duty-times">' +
         '<div><span class="t-label">Sign on</span><span class="t-value">'+fmtTime(duty.start)+'</span></div>' +
         '<div><span class="t-label">Sign off</span><span class="t-value">'+fmtTime(duty.end)+'</span></div>' +
@@ -2700,7 +2821,7 @@ if(GARAGE_PACK){(function(){
   function toiletCodesHtml(duty){
     var codes = toiletCodesForDuty(duty);
     if(!codes.length) return '';
-    return '<div class="duty-toilets"><span class="dt-label">🚻 Toilets on route:</span>' +
+    return '<div class="duty-toilets"><span class="dt-label">🚻 Toilets on route</span>' +
       codes.map(function(t){ return '<span class="dt-item"><span class="dt-name">'+escapeHtml(t.name)+'</span><span class="dt-code">'+escapeHtml(t.code)+'</span></span>'; }).join('') +
     '</div>';
   }
@@ -2714,9 +2835,9 @@ if(GARAGE_PACK){(function(){
     var bx = dutyBogeyExtra(duty), bxTxt = bx > 0 ? ' + €' + bx.toFixed(2) + ' bogey' : '';
     var oi = dutyOvertimeInfo(duty); if(oi) bxTxt += ' + <span class="ot-tag">€' + oi.amount.toFixed(2) + ' overtime</span> (' + fmtHM(oi.mins) + ')';
     if(isHourlyPay()){
-      return '<div class="duty-pay-est">Est. pay (' + fmtHM(dutyPaidMins(duty)) + ' × €' + prof.hourlyRate.toFixed(2) + '/hr' + bxTxt + '): €' + est.toFixed(2) + '</div>';
+      return '<div class="duty-pay-est"><span class="dpe-lbl">Est. pay · ' + fmtHM(dutyPaidMins(duty)) + ' × €' + prof.hourlyRate.toFixed(2) + '/hr' + bxTxt + '</span><b class="dpe-amt">€' + est.toFixed(2) + '</b></div>';
     }
-    return '<div class="duty-pay-est">Est. basic pay (' + escapeHtml(duty.dayType || 'Mon–Sat') + bxTxt + '): €' + est.toFixed(2) + '</div>';
+    return '<div class="duty-pay-est"><span class="dpe-lbl">Est. basic pay · ' + escapeHtml(duty.dayType || 'Mon–Sat') + bxTxt + '</span><b class="dpe-amt">€' + est.toFixed(2) + '</b></div>';
   }
 
   var PAY_SETTINGS_KEY = 'dublinbus_pay_settings_v1';
@@ -2995,7 +3116,6 @@ if(GARAGE_PACK){(function(){
     setOtOpen(!!(mins || (duty && workedBreakMins(duty))));
     updateOtPreview();
   }
-  function refreshOtForm(){ updateOtPreview(); }
   // Overtime is priced from Profile (rate card by day type, or your own rate), so the duty only needs the time
   function setOtOpen(open){
     var b = document.getElementById('otBody'), t = document.getElementById('otTick'); if(!b || !t) return;
@@ -3115,7 +3235,6 @@ if(GARAGE_PACK){(function(){
 
   // Sign-on numbers stored on each duty record.
   // Date-aware: prefers matches whose day type matches the selected date.
-  var SIGN_ON_MAP = {};
 
   function dayTypeFromDate(dateStr){
     if(!dateStr) return null;
@@ -3296,24 +3415,29 @@ if(GARAGE_PACK){(function(){
       var rows = (ROUTE_DUTY_DATA[zone] && ROUTE_DUTY_DATA[zone].days[day]) || [];
       row = rows.filter(function(r){ return String(r.signOn) === num || normDetailLabel(r.duty) === normDetailLabel(d.c); })[0] || null;
     }
-    var html = '<div class="dd-head"><h3 style="margin:0;">Duty ' + escapeHtml(row ? row.duty : d.c) + '</h3>' +
+    var html = '<div class="dd-head"><div class="dd-title">Duty ' + escapeHtml(row ? row.duty : d.c) + '</div>' +
       '<div class="dd-sub">' + escapeHtml(day) + ' · ' + escapeHtml(zoneShortName(zone)) + ' · Login ' + escapeHtml(String(row ? row.signOn : num)) + '</div></div>';
     if(row){
-      var br = row.breaks && row.breaks.length ? row.breaks.map(function(b){ return fmtTime(b.start)+'–'+fmtTime(b.end); }).join(', ') : 'none';
-      html += '<div class="dd-meta"><span>Report <b>' + fmtTime(row.report) + '</b></span><span>Sign off <b>' + fmtTime(row.signOff) + '</b></span><span>Breaks <b>' + escapeHtml(br) + '</b></span></div>';
+      var br = row.breaks && row.breaks.length ? row.breaks.map(function(b){ return fmtTime(b.start)+'–'+fmtTime(b.end); }).join('<br>') : 'None';
+      html += '<div class="dd-stats"><div><span>Report</span><b>' + fmtTime(row.report) + '</b></div><div><span>Sign off</span><b>' + fmtTime(row.signOff) + '</b></div><div><span>' + (row.breaks && row.breaks.length > 1 ? 'Breaks' : 'Break') + '</span><b>' + br + '</b></div></div>';
     }
-    if(live && live.state !== 'after') html += '<div class="dd-now" style="margin:10px 0 0;">📍 ' + escapeHtml(liveText(live)) + '</div>';
+    if(live && live.state !== 'after') html += '<div class="dd-now" style="margin:12px 0 0;">📍 ' + escapeHtml(liveText(live)) + '</div>';
     d.g.forEach(function(seg, segIdx){
-      html += '<div class="dd-seg"><div class="dd-seg-head">' + escapeHtml(blockLabel(segIdx, d.g.length)) +
-        (seg.r ? '<span class="dd-route">Route ' + escapeHtml(seg.r) + '</span>' : '') +
-        '</div>';
+      var timed = seg.s.filter(function(x){ return !x.k && !x.n; });
+      var first = timed[0], last = timed[timed.length-1];
+      var tCount = 0;
+      html += '<div class="dd-seg ' + routeCls(seg.r) + '"><div class="dd-seg-head">' +
+        (seg.r ? '<span class="dd-route">' + escapeHtml(seg.r) + '</span>' : '') +
+        '<span class="dd-blk">' + escapeHtml(blockLabel(segIdx, d.g.length)) + '</span>' +
+        (first && last ? '<span class="dd-range">' + escapeHtml(ddTime(first.t)) + ' – ' + escapeHtml(ddTime(last.t)) + '</span>' : '') +
+        '</div><div class="dd-stops">';
       seg.s.forEach(function(st){
         if(st.k){
           var target = st.d ? resolveDetail(zone, day, st.d) : null;
           var text = (st.k === 'p' ? 'Pick up' : 'Hand over') + (st.d ? (st.k === 'p' ? ' off Duty ' : ' to Duty ') + escapeHtml(st.d) : '');
           html += target
-            ? '<button type="button" class="dd-link" data-dd-ref="' + escapeAttr(st.d) + '">' + text + ' ›</button>'
-            : '<div class="dd-link static">' + text + '</div>';
+            ? '<button type="button" class="dd-link" data-dd-ref="' + escapeAttr(st.d) + '"><span>⇄ ' + text + '</span><span class="dd-chev">›</span></button>'
+            : '<div class="dd-link static"><span>⇄ ' + text + '</span></div>';
         } else if(st.n){
           html += '<div class="dd-note">' + escapeHtml(st.n) + '</div>';
         } else {
@@ -3324,13 +3448,19 @@ if(GARAGE_PACK){(function(){
           if(live){
             if(live.state === 'after' || tIdx < liveIdx) cls = ' dd-past';
             else if(tIdx === liveIdx) cls = ' dd-next';
-            if(tIdx === liveIdx) tags += '<span class="dd-tag" style="border-color:var(--amber);color:var(--text);">NEXT</span>';
+            if(tIdx === liveIdx) tags += '<span class="dd-tag dd-nexttag">NEXT</span>';
           }
-          tIdx++;
-          html += '<div class="dd-stop' + cls + '"><span class="dd-time">' + escapeHtml(ddTime(st.t)) + '</span><span class="dd-loc">' + escapeHtml(st.l) + tags + '</span></div>';
+          if(tCount === 0) cls += ' dd-first';
+          if(tCount === timed.length - 1) cls += ' dd-last';
+          tCount++; tIdx++;
+          html += '<div class="dd-stop' + cls + '"><span class="dd-time">' + escapeHtml(ddTime(st.t)) + '</span><span class="dd-dot"></span><span class="dd-loc">' + escapeHtml(st.l) + tags + '</span></div>';
         }
       });
-      html += '</div>';
+      html += '</div></div>';
+      if(segIdx < d.g.length - 1){
+        var bk = row && row.breaks && row.breaks[segIdx];
+        html += '<div class="dd-break"><span>Break' + (last && last.l ? ' · ' + escapeHtml(last.l) : '') + (bk ? ' · ' + fmtTime(bk.start) + '–' + fmtTime(bk.end) : '') + '</span></div>';
+      }
     });
     html += '<p class="dd-foot">Tags such as x, LB and cc are shown exactly as written on the duty sheet. Always check the depot board for changes.</p>';
     document.getElementById('detailBody').innerHTML = html;
@@ -3346,17 +3476,6 @@ if(GARAGE_PACK){(function(){
   function routeCls(r){ return r ? 'rt-' + String(r).replace(/[^A-Za-z0-9]/g,'').toLowerCase() : ''; }
   var BLOCK_WORDS = ['First','Second','Third','Fourth','Fifth','Sixth'];
   function blockLabel(i, n){ return (n > 1 ? (BLOCK_WORDS[i] || ('Block ' + (i+1))) + ' Block' : 'Block'); }
-  // Summary like "First Block 27 · Second Block 77A" for a duty, from the trip data
-  function dutyBlocksSummary(duty){
-    try{
-      var info = detailForDuty(duty.dutyNumber, duty.date);
-      if(!info || !info.hit || !info.hit.d || !info.hit.d.g || !info.hit.d.g.length) return '';
-      var g = info.hit.d.g, n = g.length;
-      return g.map(function(seg, i){
-        return '<span class="duty-block"><span class="duty-block-n">' + escapeHtml(blockLabel(i, n)) + '</span> <b>' + escapeHtml(seg.r || '—') + '</b></span>';
-      }).join('');
-    }catch(e){ return ''; }
-  }
   function closeDutyDetail(){ detailBackdrop.classList.remove('open'); detailStack = []; }
   document.getElementById('detailCloseBtn').addEventListener('click', closeDutyDetail);
   document.getElementById('detailBackBtn').addEventListener('click', function(){ detailStack.pop(); renderDutyDetail(); });
@@ -3786,6 +3905,21 @@ if(GARAGE_PACK){(function(){
     el.className = 'ot-preview';
     el.textContent = '\u20ac' + (Math.round(mins / 60 * rate * 100) / 100).toFixed(2) + ' (' + fmtHM(mins) + ' at \u20ac' + rate.toFixed(2) + '/hr' + (wb ? ', incl. ' + fmtHM(wb) + ' break' : '') + ')';
   }
+  // Stepper: total minutes live in the two hidden fields so the save code stays the same
+  function oqSet(mins){
+    mins = Math.max(0, Math.min(24*60, mins));
+    document.getElementById('oq-h').value = mins ? Math.floor(mins / 60) : '';
+    document.getElementById('oq-m').value = mins ? mins % 60 : '';
+    oqSync(); oqPreview();
+  }
+  function oqSync(){
+    var m = oqMins(), h = Math.floor(m / 60), mm = m % 60;
+    document.getElementById('oqDisplay').textContent = h + 'h ' + (mm < 10 ? '0' : '') + mm + 'm';
+    document.getElementById('oqMinus').disabled = m <= 0;
+  }
+  document.getElementById('oqPlus').addEventListener('click', function(){ oqSet(oqMins() + 15); });
+  document.getElementById('oqMinus').addEventListener('click', function(){ oqSet(oqMins() - 15); });
+  document.querySelectorAll('[data-oq-add]').forEach(function(b){ b.addEventListener('click', function(){ var a = parseInt(b.getAttribute('data-oq-add'), 10); oqSet(a ? oqMins() + a : 0); }); });
   function oqRenderBreaks(){
     var wrap = document.getElementById('oqBreaks'), list = document.getElementById('oqBreakList');
     var show = oqBreaks.length && !(isHourlyPay() && loadProfile().breaksPaid);
@@ -3804,7 +3938,7 @@ if(GARAGE_PACK){(function(){
     document.getElementById('oq-m').value = m ? m % 60 : '';
     document.getElementById('otQuickSub').textContent = (d.dutyNumber || 'Duty') + ' \u00b7 ' + fmtDateDisplay(d.date) + ' \u2014 time worked on top of your sign-off time.';
     document.getElementById('otQuickBackdrop').classList.add('open');
-    oqPreview(); document.getElementById('oq-h').focus();
+    oqSync(); oqPreview();
   }
   function closeQuickOt(){ document.getElementById('otQuickBackdrop').classList.remove('open'); oqId = null; }
   document.addEventListener('click', function(e){
@@ -3821,6 +3955,80 @@ if(GARAGE_PACK){(function(){
     saveDuties(); closeQuickOt(); render();
     try{ updateTopbarStats(); renderStatsView(); }catch(e){}
   });
+
+  // ---- Live diversion alerts (from your Cloudflare Worker, which reads the NTA feed) ----
+  var ALERTS_URL = 'https://dublinbus-alerts.lspd-bridge.workers.dev/';   // paste your Worker address here, e.g. 'https://dublinbus-alerts.yourname.workers.dev'
+  var liveAlerts = [];
+  function alertHtml(a){
+    return '<details class="tb-info has auto auto-alert"><summary>\u24d8 ' + escapeHtml(a.t) + '</summary>' + (a.x ? '<div class="auto-body">' + escapeHtml(a.x) + '</div>' : '') + '</details>';
+  }
+  function autoAlertsFor(route, dateStr){
+    if(!route || !liveAlerts.length) return [];
+    var rt = String(route).replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+    if(!rt) return [];
+    var re = new RegExp('(^|[^A-Za-z0-9])' + rt + '([^A-Za-z0-9]|$)', 'i');
+    var out = [];
+    liveAlerts.forEach(function(a){
+      // NTA route ids look like "1_130_c_a" - the route name is the 2nd part
+      var byId = (a.routeIds || []).some(function(id){ var p = String(id).split('_'); return p.length > 1 && p[1].toUpperCase() === rt; });
+      var byText = re.test((a.title || '') + ' ' + (a.text || ''));
+      // only show if the alert is active on the duty's date
+      if(dateStr && a.periods && a.periods.length){
+        var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(dateStr));
+        if(m){
+          var ds = new Date(+m[1], +m[2]-1, +m[3], 0, 0, 0).getTime()/1000;
+          var de = ds + 86400;
+          var live = a.periods.some(function(p){ var s0 = Number(p.start||0), e0 = Number(p.end||0); return (!s0 || s0 < de) && (!e0 || e0 >= ds); });
+          if(!live) return;
+        }
+      }
+      var label = a.title || a.text;
+      if(!(byId || byText)) return;
+      if(out.some(function(o){ return o.t === label; })) return;
+      var st = 0; (a.periods || []).forEach(function(p){ if(p.start && p.start > st) st = p.start; });
+      out.push({ t: label, x: a.title ? (a.text || '') : '', s: st });
+    });
+    out.sort(function(a, b){ return b.s - a.s; });   // newest alert first
+    return out.slice(0, 3);
+  }
+  function loadAlerts(){
+    if(!ALERTS_URL){ console.warn('[alerts] ALERTS_URL is empty - paste your Worker address in index.html'); return; }
+    fetch(ALERTS_URL).then(function(r){ return r.json(); }).then(function(j){
+      if(j && j.error){ console.warn('[alerts] Worker error:', j.error); return; }
+      if(j && j.alerts){ liveAlerts = j.alerts; try{ render(); }catch(e){} }
+    }).catch(function(e){ console.warn('[alerts] could not load', e); });
+  }
+  setTimeout(loadAlerts, 0);
+  setInterval(loadAlerts, 5 * 60 * 1000);
+
+
+  // ---- Bus fleet number per block ----
+  var flId = null, flIdx = 0;
+  function openFleet(id, idx){
+    var d = duties.find(function(x){ return x.id === id; }); if(!d) return;
+    flId = id; flIdx = idx;
+    document.getElementById('flSub').textContent = (d.dutyNumber || 'Duty') + ' \u00b7 ' + blockLabel(idx, 2) + ' \u2014 saved on this block of the duty.';
+    document.getElementById('flInput').value = (d.blockFleet && d.blockFleet[idx]) || '';
+    document.getElementById('flBackdrop').classList.add('open');
+    setTimeout(function(){ document.getElementById('flInput').focus(); }, 50);
+  }
+  function closeFleet(){ document.getElementById('flBackdrop').classList.remove('open'); flId = null; }
+  function saveFleet(txt){
+    var d = duties.find(function(x){ return x.id === flId; }); if(!d){ closeFleet(); return; }
+    d.blockFleet = d.blockFleet || {};
+    txt = (txt || '').replace(/\s+/g, ' ').trim().toUpperCase();
+    if(txt) d.blockFleet[flIdx] = txt; else delete d.blockFleet[flIdx];
+    saveDuties(); closeFleet(); render();
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-fleet-duty]');
+    if(b) openFleet(b.getAttribute('data-fleet-duty'), parseInt(b.getAttribute('data-fleet-block'), 10) || 0);
+  });
+  document.getElementById('flCancel').addEventListener('click', closeFleet);
+  document.getElementById('flClear').addEventListener('click', function(){ saveFleet(''); });
+  document.getElementById('flSave').addEventListener('click', function(){ saveFleet(document.getElementById('flInput').value); });
+  document.getElementById('flInput').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); saveFleet(this.value); } });
+  document.getElementById('flBackdrop').addEventListener('click', function(e){ if(e.target === this) closeFleet(); });
 
   function deleteDuty(id){
     duties = duties.filter(function(d){ return d.id !== id; });
@@ -3960,7 +4168,6 @@ if(GARAGE_PACK){(function(){
   var timetableBlock = document.getElementById('timetableBlock');
 
   var currentRouteKey = null;
-  var currentDay = null;
   var showArchived = false;
 
   var VIEW_MAP = {
@@ -4077,7 +4284,6 @@ if(GARAGE_PACK){(function(){
   document.getElementById('backToRoutes').addEventListener('click', renderRouteChooser);
 
   function openDay(routeKey, day){
-    currentDay = day;
     var dutyRows = (ROUTE_DUTY_DATA[routeKey] && ROUTE_DUTY_DATA[routeKey].days[day]) || null;
 
     if(dutyRows && dutyRows.length){
@@ -4574,8 +4780,8 @@ if(GARAGE_PACK){(function(){
     // summary cards
     var pay = null;
     if(hasPaySource()){
-      pay = 0; var anyEst = false;
-      md.forEach(function(d){ var e = estimateDutyPay(d); if(e != null){ pay += e; anyEst = true; } });
+      pay = 0;
+      md.forEach(function(d){ var e = estimateDutyPay(d); if(e != null) pay += e; });
       pay += otPay;
     }
     document.getElementById('monthGrid').innerHTML =
@@ -5725,7 +5931,6 @@ document.getElementById('sendBackupBtn').addEventListener('click', function(){ e
   function updateTopbarStats(){
     var el = document.getElementById('topbarStats');
     if(!el) return;
-    var todayStr2 = todayStr();
     var upcoming = duties.filter(function(d){ return !isPastDuty(d); });
     var weekCount = upcoming.length;
     var payTotal = null;
