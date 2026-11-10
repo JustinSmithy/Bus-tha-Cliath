@@ -4367,7 +4367,8 @@ if(GARAGE_PACK){(function(){
     if(!route || !liveAlerts.length) return [];
     var rt = String(route).replace(/[^A-Za-z0-9]/g,'').toUpperCase();
     if(!rt) return [];
-    var re = new RegExp('(^|[^A-Za-z0-9])' + rt + '([^A-Za-z0-9]|$)', 'i');
+    // match "Route 130", "Routes 27/77A" or "Routes 27, 130 and 56A" - never a bare number such as "130 metres"
+    var re = new RegExp('\\broutes?\\s+(?:[0-9A-Za-z]+(?:\\s*[/,&]\\s*|\\s+and\\s+))*' + rt + '(?![A-Za-z0-9])', 'i');
     var out = [];
     liveAlerts.forEach(function(a){
       // NTA route ids look like "1_130_c_a" - the route name is the 2nd part
