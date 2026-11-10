@@ -1740,6 +1740,21 @@
   .prof-tab{ flex:1; font:inherit; font-size:14px; font-weight:700; padding:10px 0; border:0; border-radius:999px; background:transparent; color:var(--text-secondary); cursor:pointer; }
   .prof-tab.active{ background:var(--depot-blue); color:#fff; }
   .prof-pane[hidden]{ display:none; }
+
+/* ---------- Service alerts (opened) ---------- */
+  .timeline-blockinfo details.auto-alert{ border-radius:12px !important; border-left-width:3px; }
+  .timeline-blockinfo details.auto-alert summary{ font-size:12.5px; }
+  .timeline-blockinfo details.auto-alert[open] summary{ margin-bottom:2px; line-height:1.35; }
+  .al-body{ margin-top:8px !important; }
+  .al-item{ margin-top:6px; padding:8px 10px; border:1px solid var(--line); border-left:3px solid var(--line); border-radius:0 10px 10px 0; background:var(--paper); font-size:12px; line-height:1.45; font-weight:400; color:var(--text-secondary); }
+  .al-item b{ display:block; font-size:12.5px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .al-item.mine{ border-left-color:var(--amber); background:color-mix(in srgb, var(--amber) 12%, var(--paper)); color:var(--text); }
+  .al-tag{ display:inline-block; margin-left:8px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#1a1a1a; background:var(--amber); border-radius:999px; padding:1px 8px; vertical-align:1px; }
+  .al-more{ margin-top:8px; }
+  .al-more > summary{ cursor:pointer; list-style:none; font-size:12px; font-weight:700; color:var(--depot-blue); padding:4px 0; white-space:normal; }
+  .al-more > summary::-webkit-details-marker{ display:none; }
+  .al-more > summary::before{ content:'\25B8  '; }
+  .al-more[open] > summary::before{ content:'\25BE  '; }
 html[data-layout="new"] .stat-card,html[data-layout="new"] .next-duty,html[data-layout="new"] .pay-summary-bar{border-radius:10px;}
 html[data-layout="new"] .add-btn{min-height:48px; border-radius:10px;}
 html[data-layout="new"] .add-row{display:flex; gap:8px;}
@@ -2966,7 +2981,7 @@ if(GARAGE_PACK){(function(){
               var _fl = (duty.blockFleet && duty.blockFleet[i]) || '';
               var tags = '<button type="button" class="tb-tag tb-fleet' + (_fl ? ' has' : '') + '" data-fleet-duty="' + escapeAttr(duty.id) + '" data-fleet-block="' + i + '">' + (_fl ? '\ud83d\ude8c Fleet ' + escapeHtml(_fl) : '+ Fleet no.') + '</button>'; (seg.s||[]).forEach(function(x){ if(x.k){ tags += '<span class="tb-tag">' + (x.k === 'p' ? 'Pick up' : 'Hand over') + (x.d ? (x.k === 'p' ? ' off Duty ' : ' to Duty ') + escapeHtml(x.d) : '') + '</span>'; } });
               var alertsHtml = '';
-              autoAlertsFor(seg.r, duty.date).forEach(function(a){ if(_shownA.indexOf(a.t) < 0){ _shownA.push(a.t); alertsHtml += alertHtml(a); } });
+              autoAlertsFor(seg.r, duty.date).forEach(function(a){ if(_shownA.indexOf(a.t) < 0){ _shownA.push(a.t); alertsHtml += alertHtml(a, seg.r); } });
               _parts.push('<div class="tb-card ' + routeCls(seg.r) + ' ' + (_bst[i] || '') + '">' +
                 '<div class="tb-head"><b class="tb-route">' + escapeHtml(seg.r || '') + '</b><span class="tb-time">' + escapeHtml(ddTime(ft[0].t)) + ' – ' + escapeHtml(ddTime(ft[1].t)) + '</span>' + (_bst[i] === 'is-now' ? '<span class="tb-now">NOW</span>' : '') + '</div>' +
                 (stops.length ? '<div class="tb-stops">' + stops.map(escapeHtml).join(' → ') + '</div>' : '') +
@@ -2983,7 +2998,7 @@ if(GARAGE_PACK){(function(){
       if(!blockInfoHtml && duty.route){
         var _seen = [], _fb = [];
         String(duty.route).split(/[^A-Za-z0-9]+/).filter(Boolean).forEach(function(rt){
-          autoAlertsFor(rt, duty.date).forEach(function(a){ if(_seen.indexOf(a.t) < 0){ _seen.push(a.t); _fb.push(alertHtml(a)); } });
+          autoAlertsFor(rt, duty.date).forEach(function(a){ if(_seen.indexOf(a.t) < 0){ _seen.push(a.t); _fb.push(alertHtml(a, rt)); } });
         });
         if(_fb.length) blockInfoHtml = '<div class="timeline-blockinfo">' + _fb.join('') + '</div>';
       }
@@ -4191,8 +4206,39 @@ if(GARAGE_PACK){(function(){
   // ---- Live diversion alerts (from your Cloudflare Worker, which reads the NTA feed) ----
   var ALERTS_URL = 'https://dublinbus-alerts.lspd-bridge.workers.dev/';   // paste your Worker address here, e.g. 'https://dublinbus-alerts.yourname.workers.dev'
   var liveAlerts = [];
-  function alertHtml(a){
-    return '<details class="tb-info has auto auto-alert"><summary>\u24d8 ' + escapeHtml(a.t) + '</summary>' + (a.x ? '<div class="auto-body">' + escapeHtml(a.x) + '</div>' : '') + '</details>';
+  function alertBodyHtml(text, route){
+    if(!text) return '';
+    var rt = String(route || '').replace(/[^A-Za-z0-9]/g,'');
+    var mineRe = rt ? new RegExp('Route\\s+' + rt + '(?![A-Za-z0-9])', 'i') : null;
+    var chunks = String(text).replace(/\s+/g,' ').trim().replace(/\.\s+(?=Route\s+\d)/g, '.\u0001').split('\u0001');
+    var merged = [];
+    chunks.forEach(function(c){ c = c.trim(); if(!c) return; if(merged.length && merged[merged.length-1].length < 22) merged[merged.length-1] += ' ' + c; else merged.push(c); });
+    function item(c, mine){
+      // heading = "Route 130 Diversion 11-13 November 2026" (up to " From"/" will"/first sentence)
+      var m = /^(Route\s+[0-9A-Za-z\/]+(?:\s+(?:Diversion|Service Change|Stop Closure|Closure|Changes?))?(?:\s+\d{1,2}[–\-]\d{1,2}\s+\w+\s+\d{4})?)\s*(.*)$/i.exec(c);
+      var head = m ? m[1] : '', rest = m ? m[2] : c;
+      if(!m){
+        var sm = /^(.{12,70}?[.:])\s+(.*)$/.exec(c);
+        if(sm){ head = sm[1].replace(/[.:]$/, ''); rest = sm[2]; }
+      }
+      return '<div class="al-item' + (mine ? ' mine' : '') + '">' +
+        (head ? '<b>' + escapeHtml(head) + (mine ? '<span class="al-tag">Your route</span>' : '') + '</b>' : (mine ? '<b><span class="al-tag">Your route</span></b>' : '')) +
+        (rest ? '<span>' + escapeHtml(rest) + '</span>' : '') + '</div>';
+    }
+    var mine = [], other = [];
+    merged.forEach(function(c){ (mineRe && mineRe.test(c) ? mine : other).push(c); });
+    var html = mine.map(function(c){ return item(c, true); }).join('');
+    if(other.length){
+      if(mine.length){
+        html += '<details class="al-more"><summary>' + other.length + ' other notice' + (other.length === 1 ? '' : 's') + '</summary>' + other.map(function(c){ return item(c, false); }).join('') + '</details>';
+      } else {
+        html += other.map(function(c){ return item(c, false); }).join('');
+      }
+    }
+    return '<div class="auto-body al-body">' + html + '</div>';
+  }
+  function alertHtml(a, route){
+    return '<details class="tb-info has auto auto-alert"><summary>ⓘ ' + escapeHtml(a.t) + '</summary>' + (a.x ? alertBodyHtml(a.x, route) : '') + '</details>';
   }
   function autoAlertsFor(route, dateStr){
     if(!route || !liveAlerts.length) return [];
