@@ -1544,6 +1544,202 @@
   .duty-extra-actions .dd-open[data-detail-duty]{ grid-column:1 / -1; background:var(--depot-blue); border-color:var(--depot-blue); color:#fff; font-size:14px; }
   .duty-toilets{ margin-top:14px; padding-top:12px; }
   .dt-item{ border-radius:999px; padding:4px 11px; }
+
+/* ---------- Routes + Profile redesign (matches duty card) ---------- */
+  .route-group-title{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); margin:6px 2px 8px; }
+  .route-card{ border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; align-items:flex-start; gap:0; width:100%; color:var(--text); transition:border-color .15s, transform .1s; }
+  .route-card:active{ transform:scale(.985); }
+  .route-card .rc-name{ font-size:22px; letter-spacing:-.01em; line-height:1.15; }
+  .route-card .rc-chips{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:9px; }
+  .route-card .rc-chip{ background:var(--rc, var(--depot-blue)); color:#fff; font-family:var(--font-mono); font-size:12.5px; font-weight:700; padding:2px 9px; border-radius:5px; }
+  .route-card .rc-sub{ font-size:12.5px; line-height:1.4; margin-top:9px; }
+  .route-card .rc-tag{ border-radius:999px; padding:3px 11px; margin-top:11px; font-size:11.5px; letter-spacing:.02em; }
+  .archived-toggle{ display:block; width:100%; margin-top:12px; padding:11px 14px; font:inherit; font-size:13px; font-weight:600; color:var(--text-secondary); background:var(--paper-raised); border:1px dashed var(--line); border-radius:12px; cursor:pointer; }
+  .back-btn{ display:inline-flex; align-items:center; gap:4px; padding:7px 13px; border:1px solid var(--line); border-radius:999px; background:var(--paper-raised); font-size:13px; margin-top:6px; }
+  .route-detail-title{ font-size:28px; letter-spacing:-.01em; margin:12px 0 12px; }
+  .day-tabs{ gap:8px; }
+  .day-tab{ border-radius:999px; padding:8px 15px; }
+  .day-tab.active{ background:var(--depot-blue); border-color:var(--depot-blue); color:#fff; }
+  .digitized-note, .no-data-note{ border-radius:10px; border:1px solid var(--line); border-left:4px solid var(--depot-blue); padding:10px 12px; line-height:1.45; }
+  .no-data-note{ border-left-color:var(--amber); }
+  .duty-pick-row{ border-radius:12px; padding:11px 12px; gap:10px; flex-wrap:wrap; }
+  .duty-pick-num{ font-size:22px; min-width:40px; letter-spacing:-.01em; }
+  .duty-pick-times{ font-family:var(--font-mono); font-size:13.5px; }
+  .duty-pick-times{ flex:1 1 auto; }
+  .duty-pick-break{ order:5; flex:1 1 110px; min-width:0; margin-left:0 !important; text-align:left !important; }
+  .duty-pick-trips{ order:6; border-radius:999px; padding:4px 12px; margin-left:0 !important; }
+  .duty-pick-use{ order:7; }
+  .duty-pick-use{ background:var(--depot-blue) !important; color:#fff !important; border-radius:999px; padding:6px 16px !important; font-size:12.5px; }
+  .view-sheet-btn{ border-radius:12px; padding:13px; background:var(--paper-raised); }
+
+  .field input, .field textarea, .field select, .duty-daytype-select{ border-radius:10px; padding:11px 12px; background:var(--paper); }
+  .field input:focus, .field select:focus{ border-color:var(--depot-blue); }
+  #statsView .section-head h2{ letter-spacing:-.01em; }
+  #profileCard, #profOtCard{ border-radius:14px; padding:16px; }
+  .prof-hero{ display:flex; align-items:center; gap:14px; padding-bottom:14px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+  .prof-avatar{ flex:none; width:54px; height:54px; border-radius:50%; background:var(--depot-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:24px; font-weight:700; letter-spacing:.02em; }
+  .prof-hero-name{ font-family:var(--font-display); font-size:24px; font-weight:700; line-height:1.1; letter-spacing:-.01em; word-break:break-word; }
+  .prof-hero-pills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:7px; }
+  .prof-pill{ font-size:11.5px; font-weight:600; color:var(--text); border:1px solid var(--line); background:var(--paper); border-radius:999px; padding:2px 10px; }
+  .prof-pill.rate{ font-family:var(--font-mono); color:var(--good); border-color:color-mix(in srgb, var(--good) 40%, var(--line)); }
+  .prof-sec{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); margin:18px 0 10px; display:flex; align-items:center; gap:10px; }
+  .prof-sec:first-of-type{ margin-top:0; }
+  .prof-sec::after{ content:''; flex:1; height:1px; background:var(--line); }
+  #profileCard .field label, #profOtCard .field label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  #profileCard .row2 .field{ margin-bottom:14px; }
+  .prof-chip{ font-family:var(--font-mono); font-size:12px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:999px; background:var(--paper); color:var(--text); cursor:pointer; }
+  .prof-chip:active{ background:var(--depot-blue); color:#fff; border-color:var(--depot-blue); }
+  .prof-toggle{ display:flex; gap:12px; align-items:center; font-size:14px; font-weight:600; color:var(--text); cursor:pointer; padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:var(--paper); }
+  .prof-toggle input{ width:20px; height:20px; margin:0; accent-color:var(--depot-blue); }
+  #profNote{ padding:10px 12px; border-radius:10px; background:var(--paper); border:1px solid var(--line); line-height:1.45; }
+  .ot-box.ot-profile{ border-radius:14px; }
+  .ot-sum{ border-radius:10px; padding:9px 11px; }
+  .stats-mode{ border-radius:999px; padding:3px; gap:3px; background:var(--paper-raised); }
+  .stats-mode-btn{ border-radius:999px; padding:9px 0; }
+  .week-nav-btn{ border-radius:50%; width:38px; height:38px; background:var(--paper-raised); }
+  .stats-week-nav .week-label{ background:var(--paper-raised); border:1px solid var(--line); border-radius:999px; padding:8px 12px; font-size:15px; }
+  #statsView .stat-card, .on-duty-panel{ border-radius:14px; }
+  #statsView .stats-grid .stat-card{ padding:13px 14px; }
+  .sc-label{ font-size:11px; letter-spacing:.06em; }
+
+/* ---------- Pay / Incidents / Toilets redesign ---------- */
+  .empty{ border:1px dashed var(--line); border-radius:14px; background:var(--paper-raised); padding:22px 16px; }
+  /* Pay */
+  .disclaimer-text{ border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:12px; padding:11px 13px; background:var(--paper-raised); }
+  .disclaimer-text strong{ color:var(--text); }
+  .pay-settings{ background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; padding:14px; gap:12px; margin-bottom:16px; }
+  .pay-settings .field{ margin-bottom:0; }
+  .pay-settings .field label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .pay-settings select, #psGross, #psHours{ border-radius:10px !important; padding:11px 12px !important; background:var(--paper) !important; }
+  #psGross:focus, #psHours:focus{ border-color:var(--depot-blue) !important; outline:none; }
+  .pay-table-wrap{ border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); overflow:hidden; overflow-x:auto; margin-bottom:12px; }
+  .pay-table{ margin:0; font-size:13.5px; }
+  .pay-table th{ font-family:var(--font-body); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; background:var(--paper); border-bottom:1px solid var(--line); padding:10px 10px; white-space:nowrap; }
+  .pay-table td{ padding:11px 10px; }
+  .pay-table tbody tr:last-child td{ border-bottom:0; }
+  .pay-table th.sel{ color:var(--depot-blue) !important; }
+  .pay-table td.sel{ color:var(--depot-blue); font-weight:700; background:color-mix(in srgb, var(--depot-blue) 9%, transparent); }
+  #payRateTable .pay-table td.rate-val{ font-family:var(--font-mono); font-size:13px; }
+  #checkPayslipBtn{ border-radius:12px; min-height:48px; }
+  #payslipResult .stat-card{ border-radius:14px; border:1px solid var(--line); padding:16px; }
+  #payslipResult .stat-card > .sc-value{ display:inline-block; border-radius:999px; padding:4px 12px; margin:2px 0 4px; background:color-mix(in srgb, currentColor 12%, transparent); border:1px solid color-mix(in srgb, currentColor 35%, transparent); font-family:var(--font-body); font-weight:700; }
+  #payslipResult .stat-card > div[style*="space-between"]{ display:grid !important; grid-template-columns:repeat(3,1fr); gap:8px !important; }
+  #payslipResult .stat-card > div[style*="space-between"] > div{ border:1px solid var(--line); background:var(--paper); border-radius:10px; padding:9px 10px; min-width:0; }
+  #payslipResult .stat-card > div[style*="space-between"] .sc-value{ font-size:16px !important; }
+  #payslipResult .stat-card ul{ background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:10px 12px 10px 28px !important; }
+  #payslipResult .dd-open{ display:block; width:100%; margin-top:12px; padding:12px; border-radius:12px; background:var(--depot-blue); border:1px solid var(--depot-blue); color:#fff; font:inherit; font-size:14px; font-weight:600; cursor:pointer; }
+  #siptuTable .pay-table td{ vertical-align:top; }
+  /* Toilets */
+  .toilet-search{ border-radius:999px; padding:12px 16px 12px 42px; margin-bottom:12px; background:var(--paper-raised) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239AA6AC' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.5' y2='16.5'/%3E%3C/svg%3E") no-repeat 14px 50%; background-size:19px; }
+  .toilet-search:focus{ border-color:var(--depot-blue); outline:none; }
+  .toilet-count{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); margin:0 2px 8px; }
+  .toilet-row{ border-radius:12px; padding:11px 12px 11px 14px; margin-bottom:8px; }
+  .toilet-name{ font-size:14.5px; line-height:1.3; min-width:0; }
+  .toilet-code{ font-family:var(--font-mono); font-size:13px; letter-spacing:.04em; background:color-mix(in srgb, var(--depot-blue) 12%, transparent); border:1px solid color-mix(in srgb, var(--depot-blue) 35%, transparent); border-radius:999px; padding:4px 12px; flex:none; }
+  .toilet-code{ white-space:normal; text-align:right; font-size:12.5px; line-height:1.35; max-width:64%; border-radius:14px; flex:0 1 auto; word-break:break-word; }
+  .pay-table th:first-child, .pay-table td.rate-label{ position:sticky; left:0; z-index:1; background:var(--paper-raised); min-width:128px; max-width:150px; box-shadow:1px 0 0 var(--line); }
+  .pay-table th:first-child{ background:var(--paper); }
+  .pay-table td.rate-val{ white-space:nowrap; }
+  #siptuTable .pay-table td, #siptuTable .pay-table th{ white-space:normal; }
+  #siptuTable .pay-table th:first-child, #siptuTable .pay-table td.rate-label{ position:static; box-shadow:none; min-width:0; max-width:none; }
+  .toilet-empty{ border:1px dashed var(--line); border-radius:14px; background:var(--paper-raised); }
+  /* Incidents */
+  #openIncidentBtn{ border-radius:12px; min-height:50px; }
+  .inc-card{ background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; }
+  .inc-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .inc-type{ display:inline-flex; align-items:center; gap:7px; font-size:14px; font-weight:700; border-radius:999px; padding:4px 12px; color:var(--ic, var(--amber-dim)); background:color-mix(in srgb, var(--ic, var(--amber)) 13%, transparent); border:1px solid color-mix(in srgb, var(--ic, var(--amber)) 40%, transparent); }
+  .inc-type::before{ content:''; width:8px; height:8px; border-radius:50%; background:var(--ic, var(--amber)); }
+  .inc-card.sev{ --ic:var(--alert); }
+  .inc-meta{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .inc-pill{ font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--line); background:var(--paper); border-radius:999px; padding:3px 10px; }
+  .inc-pill.link{ color:var(--depot-blue); }
+  .inc-pill.ref{ font-family:var(--font-mono); color:var(--depot-blue); }
+  .inc-desc{ margin-top:12px; padding:10px 12px; border:1px solid var(--line); background:var(--paper); border-radius:10px; font-size:13.5px; line-height:1.45; color:var(--text-secondary); white-space:pre-wrap; }
+
+/* ---------- Incident form ---------- */
+  .inc-modal{ border-radius:20px 20px 0 0 !important; border-top:0 !important; padding:20px 18px 0 !important; }
+  .inc-modal h3{ font-size:26px; margin:0 0 2px; letter-spacing:-.01em; }
+  .inc-modal-sub{ margin:0 0 4px; font-size:12.5px; color:var(--text-secondary); }
+  .inc-sec{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); margin:20px 0 10px; display:flex; align-items:center; gap:10px; }
+  .inc-sec::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .inc-types{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .inc-tchip{ display:flex; align-items:center; gap:9px; font:inherit; font-size:13.5px; font-weight:600; text-align:left; color:var(--text); background:var(--paper); border:1.5px solid var(--line); border-radius:12px; padding:11px 12px; min-height:48px; cursor:pointer; line-height:1.2; }
+  .inc-tchip .ti{ font-size:17px; width:22px; text-align:center; flex:none; font-style:normal; }
+  .inc-tchip:last-child{ grid-column:1 / -1; }
+  .inc-tchip[aria-checked="true"]{ border-color:var(--depot-blue); background:color-mix(in srgb, var(--depot-blue) 12%, transparent); color:var(--depot-blue); }
+  .inc-tchip.sev[aria-checked="true"]{ border-color:var(--alert); background:color-mix(in srgb, var(--alert) 12%, transparent); color:var(--alert); }
+  .inc-modal .field label .opt{ text-transform:none; letter-spacing:0; font-weight:500; color:var(--text-secondary); opacity:.8; margin-left:4px; font-size:11.5px; }
+  .inc-modal .field input, .inc-modal .field textarea, .inc-modal .field select{ border-radius:10px; padding:11px 12px; }
+  .inc-modal .field label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .inc-modal .modal-actions{ position:sticky; bottom:0; margin:14px -18px 0; padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px)); background:var(--paper-raised); border-top:1px solid var(--line); z-index:2; }
+  .inc-modal .btn-primary, .inc-modal .btn-secondary{ border-radius:12px; min-height:48px; }
+  .inc-modal .btn-primary{ flex:1.6; background:var(--depot-blue); color:#fff; }
+  .inc-modal .btn-primary:hover{ background:var(--depot-blue-dim); }
+
+/* ---------- App-wide polish: header, home, forms, backup ---------- */
+  .page-head{ background:color-mix(in srgb, var(--paper-raised) 88%, transparent); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; align-items:center; }
+  .page-title{ font-size:30px; letter-spacing:-.01em; }
+  .page-stats{ gap:16px; }
+  .ts-label{ font-size:10.5px; letter-spacing:.06em; }
+  .ts-value{ font-size:16px; }
+  .section-head{ margin-top:22px; }
+  .section-count{ font-size:12px; font-weight:700; color:var(--text-secondary); background:color-mix(in srgb, var(--paper-raised) 88%, transparent); border:1px solid var(--line); border-radius:999px; padding:2px 10px; }
+  .route-group-title, .toilet-count{ display:inline-block; background:color-mix(in srgb, var(--paper-raised) 88%, transparent); border:1px solid var(--line); border-radius:999px; padding:3px 11px; margin-left:0; }
+  #incidentsView > p{ background:color-mix(in srgb, var(--paper-raised) 88%, transparent); border:1px solid var(--line); border-radius:12px; padding:10px 13px; line-height:1.5; }
+  .storage-note{ background:color-mix(in srgb, var(--paper-raised) 88%, transparent); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-top:28px; }
+  /* Home buttons */
+  #openAddBtn, #openWeekBtn{ border-radius:12px; min-height:50px; font-size:15px; }
+  #openAddBtn{ background:var(--depot-blue); }
+  #openWeekBtn{ background:var(--paper-raised) !important; color:var(--depot-blue); border:1px solid var(--line); }
+  /* Next duty hero */
+  .next-duty{ border:0; border-left:0; border-radius:18px; padding:16px 18px; margin:16px 0 10px; color:#fff; background:linear-gradient(135deg,#0B3A6B,#00478A 60%,#0E5CA8); box-shadow:0 6px 20px rgba(0,40,90,.28); }
+  .next-duty.live{ background:linear-gradient(135deg,#17573A,#2F7D4F 65%,#3A9360); }
+  .next-duty .nd-label{ color:rgba(255,255,255,.78); font-size:11px; letter-spacing:.08em; }
+  .next-duty .nd-main{ align-items:center; margin-top:8px; }
+  .next-duty .nd-duty{ font-size:26px; letter-spacing:-.01em; }
+  .next-duty .nd-count{ font-family:var(--font-mono); font-size:15px; font-weight:700; color:#1a1a1a; background:var(--amber); border-radius:999px; padding:5px 13px; white-space:nowrap; }
+  .next-duty.live .nd-count{ background:#fff; color:#17573A; }
+  .next-duty .nd-meta{ color:rgba(255,255,255,.86); margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.2); font-size:13.5px; }
+  .pay-summary-bar{ border-radius:14px; border-left:1px solid var(--line); padding:13px 16px; margin:10px 0 6px; }
+  .pay-summary-bar .psb-value{ font-family:var(--font-mono); color:var(--good); font-size:24px; }
+  /* Sheets (add duty, add week, others) */
+  .modal{ border-radius:20px 20px 0 0; border-top:0; padding:20px 18px 0; }
+  @media (min-width:640px){ .modal{ border-radius:20px; border-top:0; padding-bottom:8px; } }
+  .modal h3{ font-size:26px; letter-spacing:-.01em; }
+  .modal .field input, .modal .field textarea, .modal .field select, .modal .duty-daytype-select{ border-radius:10px; padding:11px 12px; }
+  .modal .field label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .modal .modal-actions{ position:sticky; bottom:0; margin:14px -18px 0; padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px)); background:var(--paper-raised); border-top:1px solid var(--line); z-index:2; }
+  .btn-primary, .btn-secondary{ border-radius:12px; min-height:48px; }
+  .btn-primary{ background:var(--depot-blue); color:#fff; flex:1.6; }
+  .btn-primary:hover{ background:var(--depot-blue-dim); }
+  .error-note{ border-radius:10px; }
+  .paste-box{ border:1px solid var(--line); border-radius:12px; background:var(--paper); padding:2px 12px; }
+  .paste-box summary{ padding:11px 0; font-weight:600; }
+  .day-selector{ display:flex; gap:6px; padding:4px; background:var(--paper); border:1px solid var(--line); border-radius:999px; margin-bottom:14px; }
+  .day-sel-btn{ border:0 !important; border-radius:999px; padding:10px 4px; background:transparent; }
+  .day-sel-btn.active{ background:var(--depot-blue) !important; color:#fff !important; }
+  .zone-chip{ border-radius:999px; padding:8px 14px; }
+  .zone-chip .zbox{ border-radius:50%; }
+  .zone-chip.active{ border-color:var(--depot-blue); background:color-mix(in srgb, var(--depot-blue) 12%, transparent); color:var(--depot-blue); }
+  .zone-chip.active .zbox{ background:var(--depot-blue); border-color:var(--depot-blue); color:#fff; }
+  .week-row{ padding:9px 0; }
+  .week-day{ width:58px; }
+  .week-in{ border-radius:10px; padding:9px 10px; }
+  .dd-open{ border-radius:10px; }
+  /* Backup buttons */
+  .transfer-row .add-btn{ border-radius:12px; min-height:48px; font-size:14px; margin-top:0; }
+  .page-wrap > .page-head{ margin-top:12px; }
+  .modal label.prof-toggle{ text-transform:none; letter-spacing:0; font-size:14px; font-weight:600; color:var(--text); display:flex; align-items:center; }
+  .transfer-row .add-btn:not(#sendBackupBtn){ background:var(--paper) !important; color:var(--text) !important; border:1px solid var(--line) !important; }
+  .transfer-row .add-btn:not(#sendBackupBtn):active{ border-color:var(--depot-blue) !important; }
+  #lastBackupNote{ padding:8px 12px; border-radius:10px; background:var(--paper); border:1px solid var(--line); }
+  .stat-card.full[style*="margin-bottom:14px"] p strong{ color:var(--text); }
+
+/* ---------- Profile sub-tabs ---------- */
+  .prof-tabs{ display:flex; gap:4px; padding:4px; margin:0 0 16px; background:color-mix(in srgb, var(--paper-raised) 90%, transparent); border:1px solid var(--line); border-radius:999px; position:sticky; top:8px; z-index:20; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+  .prof-tab{ flex:1; font:inherit; font-size:14px; font-weight:700; padding:10px 0; border:0; border-radius:999px; background:transparent; color:var(--text-secondary); cursor:pointer; }
+  .prof-tab.active{ background:var(--depot-blue); color:#fff; }
+  .prof-pane[hidden]{ display:none; }
 html[data-layout="new"] .stat-card,html[data-layout="new"] .next-duty,html[data-layout="new"] .pay-summary-bar{border-radius:10px;}
 html[data-layout="new"] .add-btn{min-height:48px; border-radius:10px;}
 html[data-layout="new"] .add-row{display:flex; gap:8px;}
@@ -1781,14 +1977,26 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
 
 
   <section id="statsView" style="display:none;">
-    <div class="section-head" style="margin-top:4px;">
-      <h2>My Profile</h2>
+    <div class="prof-tabs" id="profTabs" role="tablist" aria-label="Profile sections">
+      <button type="button" class="prof-tab active" role="tab" aria-selected="true" data-pane="profile">Profile</button>
+      <button type="button" class="prof-tab" role="tab" aria-selected="false" data-pane="stats">Stats</button>
+      <button type="button" class="prof-tab" role="tab" aria-selected="false" data-pane="settings">Settings</button>
     </div>
+    <div class="prof-pane" data-pane="profile">
     <div class="stat-card full" id="profileCard" style="margin-bottom:10px;">
+      <div class="prof-hero">
+        <span class="prof-avatar" id="profAvatar" aria-hidden="true">?</span>
+        <div style="min-width:0;">
+          <div class="prof-hero-name" id="profHeroName">Your profile</div>
+          <div class="prof-hero-pills" id="profHeroPills"></div>
+        </div>
+      </div>
+      <div class="prof-sec">About you</div>
       <div class="field">
         <label for="profName">Name (optional)</label>
         <input type="text" id="profName" placeholder="Your name" autocomplete="name">
       </div>
+      <div class="prof-sec">Contract</div>
       <div class="field">
         <label for="profEmployment">Contract type</label>
         <select id="profEmployment" class="duty-daytype-select"></select>
@@ -1797,14 +2005,17 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
         <label for="profYear">Pay scale (years of service)</label>
         <select id="profYear" class="duty-daytype-select"></select>
       </div>
-      <div class="field">
-        <label for="profHours">Contracted hours per week</label>
-        <input type="number" id="profHours" min="0" max="60" step="0.5" inputmode="decimal" placeholder="">
+      <div class="row2">
+        <div class="field">
+          <label for="profHours">Hours per week</label>
+          <input type="number" id="profHours" min="0" max="60" step="0.5" inputmode="decimal" placeholder="">
+        </div>
+        <div class="field">
+          <label for="profRest">Min. rest (hrs)</label>
+          <input type="number" id="profRest" min="1" max="24" step="0.5" inputmode="decimal" placeholder="10">
+        </div>
       </div>
-      <div class="field">
-        <label for="profRest">Minimum rest between duties (hours)</label>
-        <input type="number" id="profRest" min="1" max="24" step="0.5" inputmode="decimal" placeholder="10">
-      </div>
+      <div class="prof-sec">Depot</div>
       <div class="field" id="profGarageField">
         <label for="profGarage">My garage</label>
         <select id="profGarage" class="duty-daytype-select"></select>
@@ -1814,13 +2025,14 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
         <select id="profZone" class="duty-daytype-select"></select>
       </div>
       <div id="profPartTime">
+        <div class="prof-sec">Pay</div>
         <div class="field" style="margin-bottom:6px;">
           <label for="profRate">My hourly rate (€ per hour, gross)</label>
           <input type="number" id="profRate" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 24.91">
         </div>
         <div id="profRateChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
-        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--text);cursor:pointer;">
-          <input type="checkbox" id="profBreaksPaid" style="width:18px;height:18px;margin:0;"> Count breaks as paid time
+        <label class="prof-toggle">
+          <input type="checkbox" id="profBreaksPaid"> Count breaks as paid time
         </label>
         <div class="field" style="margin-top:14px;">
           <label for="profBogey">Bogey duty extra (€ per hour of non-driving time)</label>
@@ -1850,7 +2062,9 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       <div id="profOtSummary" class="ot-sums"></div>
     </div>
 
-    <div class="section-head" style="margin-top:24px;">
+    </div>
+    <div class="prof-pane" data-pane="stats" hidden>
+    <div class="section-head" style="margin-top:4px;">
       <h2>Stats</h2>
     </div>
 
@@ -1915,9 +2129,12 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
     <p id="restNote" style="font-size:12.5px;color:var(--text-secondary);margin:0 0 10px;"></p>
     <div id="restPeriods" style="margin-bottom:6px;"></div>
 
-    <div class="section-head" style="margin-top:24px;">
+    </div>
+    <div class="prof-pane" data-pane="settings" hidden>
+    <div class="section-head" style="margin-top:4px;">
       <h2>Reminders</h2>
     </div>
+    <div class="stat-card full" style="margin-bottom:14px;">
     <p style="font-size:13px;color:var(--text-secondary);margin:0 0 10px;">Sign-on alerts need a secure (HTTPS) page and a browser that supports notifications. For a reminder that works on any phone, add your duties to the calendar.</p>
     <div id="reminderStatus" style="margin-bottom:8px;font-size:13px;color:var(--text-secondary);"></div>
     <button type="button" class="add-btn" id="enableNotifBtn" style="background:var(--depot-blue);margin-bottom:8px;">🔔 Enable sign-on reminders</button>
@@ -1934,6 +2151,7 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
     <p style="font-size:12px;color:var(--text-secondary);margin:8px 0 0;">Creates a calendar file with an alert before each sign-on, using the minutes above. Open it to add the duties to your phone’s calendar.</p>
 
   
+    </div>
     <div class="section-head" style="margin-top:28px;">
       <h2>Appearance</h2>
     </div>
@@ -1965,16 +2183,17 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       </div>
       <div class="transfer-row">
         <button type="button" class="add-btn" id="sendBackupBtn" style="background:var(--depot-blue);">📤 Send to another device</button>
-        <button type="button" class="add-btn" id="exportBackupBtn" style="background:var(--board-black);color:#fff;border:1px solid var(--line);">⬇ Download backup</button>
-        <label class="add-btn" style="cursor:pointer;background:var(--board-black);color:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;text-align:center;gap:6px;">⬆ Restore backup<input type="file" id="importBackupInput" accept=".json,application/json" style="display:none;"></label>
+        <button type="button" class="add-btn" id="exportBackupBtn" style="">⬇ Download backup</button>
+        <label class="add-btn" style="cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;gap:6px;">⬆ Restore backup<input type="file" id="importBackupInput" accept=".json,application/json" style="display:none;"></label>
       </div>
       <div class="transfer-row" style="margin-top:10px;">
-        <button type="button" class="add-btn" id="showQrBtn" style="background:var(--board-black);color:#fff;border:1px solid var(--line);">📱 Show QR code</button>
-        <button type="button" class="add-btn" id="scanQrBtn" style="background:var(--board-black);color:#fff;border:1px solid var(--line);">📷 Scan QR code</button>
+        <button type="button" class="add-btn" id="showQrBtn" style="">📱 Show QR code</button>
+        <button type="button" class="add-btn" id="scanQrBtn" style="">📷 Scan QR code</button>
       </div>
       <p id="lastBackupNote" role="status" style="margin:10px 0 0;font-size:12.5px;color:var(--text-secondary);"></p>
       <p style="margin:8px 0 0;font-size:12px;line-height:1.45;color:var(--text-secondary);">Tip: iPhone Safari can clear saved data from sites you haven’t opened for about a week. Use Share → Add to Home Screen to keep it safe, and download a backup now and then.</p>
     </div>
+  </div>
   </section>
 
 
@@ -2104,8 +2323,8 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
         <option value="Public/Bank Holiday">Public/Bank Holiday</option>
       </select>
           <div class="bh-hint" id="dayTypeHint"></div>
-      <label style="display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px;cursor:pointer;">
-        <input type="checkbox" id="f-bogey" style="width:20px;height:20px;margin:0;"> Bogey duty (extra pay on non-driving time)
+      <label class="prof-toggle" style="margin-top:12px;">
+        <input type="checkbox" id="f-bogey"> Bogey duty (extra pay on non-driving time)
       </label>
     </div>
 
@@ -2177,8 +2396,31 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
 
 <!-- Incident Modal -->
 <div class="modal-backdrop" id="incidentModalBackdrop">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="incidentModalTitle">
+  <div class="modal inc-modal" role="dialog" aria-modal="true" aria-labelledby="incidentModalTitle">
     <h3 id="incidentModalTitle">Log an incident</h3>
+    <p class="inc-modal-sub">Saved privately on this device.</p>
+
+    <div class="inc-sec">What happened?</div>
+    <div class="inc-types" id="incTypeChips" role="radiogroup" aria-label="Incident type">
+      <button type="button" class="inc-tchip" data-type="Collision" role="radio"><span class="ti">💥</span>Collision / near miss</button>
+      <button type="button" class="inc-tchip" data-type="Passenger" role="radio"><span class="ti">🧑</span>Passenger issue</button>
+      <button type="button" class="inc-tchip" data-type="Vehicle fault" role="radio"><span class="ti">🔧</span>Vehicle fault</button>
+      <button type="button" class="inc-tchip" data-type="Delay" role="radio"><span class="ti">⏱️</span>Delay / disruption</button>
+      <button type="button" class="inc-tchip sev" data-type="Assault" role="radio"><span class="ti">⚠️</span>Assault / threat</button>
+      <button type="button" class="inc-tchip" data-type="Road conditions" role="radio"><span class="ti">🌧️</span>Road / weather</button>
+      <button type="button" class="inc-tchip" data-type="Other" role="radio"><span class="ti">•••</span>Other</button>
+    </div>
+    <select id="if-type" class="duty-daytype-select" hidden aria-hidden="true" tabindex="-1">
+      <option value="Collision">Collision / Near miss</option>
+      <option value="Passenger">Passenger complaint / incident</option>
+      <option value="Vehicle fault">Vehicle fault</option>
+      <option value="Delay">Delay / disruption</option>
+      <option value="Assault">Assault / threatening behaviour</option>
+      <option value="Road conditions">Road / weather conditions</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <div class="inc-sec">When &amp; where</div>
     <div class="row2">
       <div class="field">
         <label for="if-date">Date</label>
@@ -2190,35 +2432,25 @@ html[data-layout="new"] .more-menu button:hover,html[data-layout="new"] .more-me
       </div>
     </div>
     <div class="field">
-      <label for="if-duty">Linked duty</label>
-      <select id="if-duty" class="duty-daytype-select"></select>
-    </div>
-    <div class="field">
-      <label for="if-route">Route / bus (optional)</label>
-      <input type="text" id="if-route" placeholder="e.g. Route 77A, bus 1">
-    </div>
-    <div class="field">
       <label for="if-location">Location</label>
       <input type="text" id="if-location" placeholder="e.g. Parnell Square, stop 1234">
     </div>
     <div class="field">
-      <label for="if-type">Incident type</label>
-      <select id="if-type" class="duty-daytype-select">
-        <option value="Collision">Collision / Near miss</option>
-        <option value="Passenger">Passenger complaint / incident</option>
-        <option value="Vehicle fault">Vehicle fault</option>
-        <option value="Delay">Delay / disruption</option>
-        <option value="Assault">Assault / threatening behaviour</option>
-        <option value="Road conditions">Road / weather conditions</option>
-        <option value="Other">Other</option>
-      </select>
+      <label for="if-duty">Linked duty</label>
+      <select id="if-duty" class="duty-daytype-select"></select>
     </div>
+    <div class="field">
+      <label for="if-route">Route / bus <span class="opt">optional</span></label>
+      <input type="text" id="if-route" placeholder="e.g. Route 77A, bus 1">
+    </div>
+
+    <div class="inc-sec">Details</div>
     <div class="field">
       <label for="if-desc">Description</label>
-      <textarea id="if-desc" style="min-height:100px;" placeholder="What happened? Include any relevant details — vehicle numbers, witnesses, injuries, Garda involvement etc."></textarea>
+      <textarea id="if-desc" style="min-height:110px;" placeholder="What happened? Vehicle numbers, witnesses, injuries, Garda involvement…"></textarea>
     </div>
     <div class="field">
-      <label for="if-ref">Reference number (if any)</label>
+      <label for="if-ref">Reference number <span class="opt">optional</span></label>
       <input type="text" id="if-ref" placeholder="e.g. Garda case no., Dublin Bus ref">
     </div>
     <div class="modal-actions">
@@ -4209,8 +4441,13 @@ if(GARAGE_PACK){(function(){
     else if(dataType === 'timetable') { tagText = 'Public timetable'; tagClass=' viewer-only'; }
     var dayCount = ROUTE_IMAGES[r.key] ? Object.keys(ROUTE_IMAGES[r.key]).length :
                    (TIMETABLE_DATA[r.key.replace('route','')] ? 1 : 0);
+    var _nm = String(r.name), _pm = _nm.match(/^(.*?)\s*\(([^)]+)\)\s*$/), _chips = '';
+    if(_pm){
+      _nm = _pm[1];
+      _chips = '<span class="rc-chips">' + _pm[2].split('/').map(function(x){ x = x.trim(); return x ? '<b class="rc-chip ' + routeCls(x) + '">' + escapeHtml(x) + '</b>' : ''; }).join('<span class="dr-arrow">·</span>') + '</span>';
+    }
     return '<button class="route-card" data-route="'+r.key+'" type="button">' +
-      '<span class="rc-name">'+escapeHtml(r.name)+'</span>' +
+      '<span class="rc-name">'+escapeHtml(_nm)+'</span>' + _chips +
       '<span class="rc-sub">'+(r.note ? escapeHtml(r.note) : (dayCount+' sheet'+(dayCount===1?'':'s')))+'</span>' +
       '<span class="rc-tag'+tagClass+'">'+tagText+'</span>' +
     '</button>';
@@ -4450,13 +4687,13 @@ if(GARAGE_PACK){(function(){
     var cat = PAY_DATA.categories[catKey];
     if(!cat) return;
     var html = '<div class="pay-table-wrap"><table class="pay-table"><thead><tr><th>Rate</th>' +
-      PAY_DATA.years.map(function(y, i){ return '<th'+(i===yearIdx?' style="color:var(--depot-blue)"':'')+'>'+escapeHtml(y)+'</th>'; }).join('') +
+      PAY_DATA.years.map(function(y, i){ return '<th'+(i===yearIdx?' class="sel"':'')+'>'+escapeHtml(y)+'</th>'; }).join('') +
       '</tr></thead><tbody>' +
       cat.rows.map(function(row){
         return '<tr' + (0===yearIdx?'':'') + '>' +
           '<td class="rate-label">'+escapeHtml(row.label)+'</td>' +
           row.values.map(function(v, i){
-            return '<td class="rate-val'+(i===yearIdx?'" style="color:var(--depot-blue);font-weight:700':'')+'">€'+v.toFixed(2)+'</td>';
+            return '<td class="rate-val'+(i===yearIdx?' sel':'')+'">€'+v.toFixed(2)+'</td>';
           }).join('') +
         '</tr>';
       }).join('') +
@@ -4505,7 +4742,7 @@ if(GARAGE_PACK){(function(){
       toiletList.innerHTML = '<div class="toilet-empty">No matches — try a different garage or stop name.</div>';
       return;
     }
-    toiletList.innerHTML = rows.map(function(t){
+    toiletList.innerHTML = '<div class="toilet-count">' + rows.length + (rows.length === 1 ? ' location' : ' locations') + '</div>' + rows.map(function(t){
       return '<div class="toilet-row"><span class="toilet-name">'+escapeHtml(t.name)+'</span><span class="toilet-code">'+escapeHtml(t.code)+'</span></div>';
     }).join('');
   }
@@ -4627,7 +4864,7 @@ if(GARAGE_PACK){(function(){
     document.getElementById('profName').value = prof.name;
     var hoursEl = document.getElementById('profHours');
     hoursEl.value = prof.contractHours > 0 ? prof.contractHours : '';
-    hoursEl.placeholder = cur === 'partTime' ? 'e.g. 24 (blank = 39)' : 'blank = ' + categoryDefaultHours(cur);
+    hoursEl.placeholder = cur === 'partTime' ? 'e.g. 24' : 'blank = ' + categoryDefaultHours(cur);
     document.getElementById('profRest').value = prof.minRestHours;
     var zs = ROUTE_META.filter(function(m){ return m.dataType === 'duty' && ROUTE_DUTY_DATA[m.key]; });
     document.getElementById('profZoneField').style.display = zs.length > 1 ? '' : 'none';
@@ -4649,7 +4886,7 @@ if(GARAGE_PACK){(function(){
       chipsEl.innerHTML = '<span style="font-size:12px;color:var(--text-secondary);width:100%;">NBRU part-time hourly rates — tap to use:</span>' +
         PAY_DATA.years.map(function(y, i){
           return '<button type="button" class="prof-chip" data-rate="' + row.values[i].toFixed(2) + '" ' +
-            'style="font-family:var(--font-body);font-size:12px;padding:6px 9px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--text);cursor:pointer;">' +
+            '>' +
             escapeHtml(y) + ' · €' + row.values[i].toFixed(2) + '</button>';
         }).join('');
       chipsEl.querySelectorAll('.prof-chip').forEach(function(bt){
@@ -4660,7 +4897,25 @@ if(GARAGE_PACK){(function(){
       });
     } else { chipsEl.innerHTML = ''; }
     renderOtProfile(true);
+    updateProfHero();
   }
+
+  function updateProfHero(){
+    var av = document.getElementById('profAvatar'); if(!av) return;
+    var nm = (document.getElementById('profName').value || '').trim();
+    var parts = nm.split(/\s+/).filter(Boolean);
+    av.textContent = parts.length ? (parts[0][0] + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase() : '\uD83D\uDE8C';
+    document.getElementById('profHeroName').textContent = nm || 'Your profile';
+    var pills = [], sel = function(id){ var e = document.getElementById(id); return e && e.selectedIndex >= 0 ? e.options[e.selectedIndex].text : ''; };
+    var emp = sel('profEmployment'), yr = sel('profYear'), gr = sel('profGarage');
+    if(emp) pills.push('<span class="prof-pill">' + escapeHtml(emp) + '</span>');
+    if(yr) pills.push('<span class="prof-pill">' + escapeHtml(yr) + '</span>');
+    if(gr) pills.push('<span class="prof-pill">' + escapeHtml(gr) + '</span>');
+    var r = parseFloat(document.getElementById('profRate').value);
+    if(r > 0 && document.getElementById('profPartTime').style.display !== 'none') pills.push('<span class="prof-pill rate">\u20ac' + r.toFixed(2) + '/hr</span>');
+    document.getElementById('profHeroPills').innerHTML = pills.join('');
+  }
+  ['input','change'].forEach(function(ev){ document.getElementById('profileCard').addEventListener(ev, updateProfHero); });
 
   // ---- Overtime pay card in Profile: default rate + what you've logged ----
   function renderOtProfile(fill){
@@ -4725,6 +4980,21 @@ if(GARAGE_PACK){(function(){
   }
   ['profName','profRate','profHours','profRest','profBogey','profOtRate'].forEach(function(id){ document.getElementById(id).addEventListener('input', profileChanged); });
   ['profEmployment','profYear','profBreaksPaid','profZone','profOtMode'].forEach(function(id){ document.getElementById(id).addEventListener('change', profileChanged); });
+
+  // ---- Profile sub-tabs (Profile / Stats / Settings) ----
+  (function(){
+    var tabs = document.querySelectorAll('#profTabs .prof-tab'), panes = document.querySelectorAll('#statsView .prof-pane');
+    function show(name, scroll){
+      tabs.forEach(function(t){ var on = t.getAttribute('data-pane') === name; t.classList.toggle('active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      panes.forEach(function(p){ p.hidden = p.getAttribute('data-pane') !== name; });
+      try{ localStorage.setItem('dublinbus_profpane', name); }catch(e){}
+      if(scroll) window.scrollTo(0, 0);
+    }
+    tabs.forEach(function(t){ t.addEventListener('click', function(){ show(t.getAttribute('data-pane'), true); }); });
+    var saved = 'profile'; try{ saved = localStorage.getItem('dublinbus_profpane') || 'profile'; }catch(e){}
+    if(['profile','stats','settings'].indexOf(saved) < 0) saved = 'profile';
+    show(saved, false);
+  })();
 
   // ---- Month view ----
   var statsMode = 'week', statsMonthOffset = 0, monthSelectedDay = null;
@@ -5026,8 +5296,17 @@ if(GARAGE_PACK){(function(){
     document.getElementById('if-ref').value = inc ? (inc.ref||'') : '';
     var selId = inc ? (inc.dutyId || '') : (preset ? preset.id : ((dutyOnDate(document.getElementById('if-date').value) || {}).id || ''));
     fillIncidentDutyOptions(selId, inc ? inc.dutyLabel : '');
+    syncIncChips();
     incidentModalBackdrop.classList.add('open');
+    var _m = incidentModalBackdrop.querySelector('.modal'); if(_m) _m.scrollTop = 0;
   }
+  function syncIncChips(){
+    var v = document.getElementById('if-type').value;
+    document.querySelectorAll('#incTypeChips .inc-tchip').forEach(function(c){ c.setAttribute('aria-checked', c.getAttribute('data-type') === v ? 'true' : 'false'); });
+  }
+  document.querySelectorAll('#incTypeChips .inc-tchip').forEach(function(c){
+    c.addEventListener('click', function(){ document.getElementById('if-type').value = c.getAttribute('data-type'); syncIncChips(); });
+  });
   function closeIncidentModal(){
     incidentModalBackdrop.classList.remove('open');
   }
@@ -5108,22 +5387,29 @@ if(GARAGE_PACK){(function(){
       return;
     }
     list.innerHTML = incidents.map(function(inc){
-      var typeColour = inc.type==='Assault'||inc.type==='Collision' ? 'var(--alert)' : 'var(--amber)';
-      return '<div class="duty-card" style="border-left-color:'+typeColour+'">' +
-        '<div class="duty-top">' +
-          '<div>' +
-            '<div style="font-family:var(--font-display);font-size:18px;font-weight:700;">'+escapeHtml(inc.type)+'</div>' +
-            '<div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px;">'+escapeHtml(inc.date)+(inc.time?' · '+escapeHtml(inc.time):'')+(inc.route?' · '+escapeHtml(inc.route):'')+'</div>' +
-            (inc.location?'<div style="font-size:12.5px;color:var(--text-secondary);">📍 '+escapeHtml(inc.location)+'</div>':'') +
-            (inc.dutyId ? (function(){ var ld = duties.filter(function(x){ return x.id === inc.dutyId; })[0]; return '<div style="font-size:12.5px;font-weight:600;color:'+(ld?'var(--depot-blue)':'var(--text-secondary)')+';margin-top:2px;">🔗 '+escapeHtml(ld ? dutyLinkLabel(ld) : ((inc.dutyLabel||'Duty')+' (duty removed)'))+'</div>'; })() : '') +
-          '</div>' +
+      var sev = inc.type==='Assault'||inc.type==='Collision';
+      var linked = '';
+      if(inc.dutyId){
+        var ld = duties.filter(function(x){ return x.id === inc.dutyId; })[0];
+        linked = '<span class="inc-pill link">🔗 ' + escapeHtml(ld ? dutyLinkLabel(ld) : ((inc.dutyLabel||'Duty')+' (duty removed)')) + '</span>';
+      }
+      return '<div class="inc-card' + (sev ? ' sev' : '') + '">' +
+        '<div class="inc-top">' +
+          '<span class="inc-type">' + escapeHtml(inc.type) + '</span>' +
           '<div class="duty-actions">' +
             '<button class="icon-btn" data-inc-edit="'+inc.id+'" type="button" aria-label="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
             '<button class="icon-btn danger" data-inc-del="'+inc.id+'" type="button" aria-label="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
           '</div>' +
         '</div>' +
-        (inc.desc?'<div style="margin-top:10px;font-size:13.5px;color:var(--text-secondary);">'+escapeHtml(inc.desc)+'</div>':'') +
-        (inc.ref?'<div style="margin-top:6px;font-size:12px;font-weight:600;color:var(--depot-blue);">Ref: '+escapeHtml(inc.ref)+'</div>':'') +
+        '<div class="inc-meta">' +
+          '<span class="inc-pill">📅 ' + escapeHtml(inc.date) + '</span>' +
+          (inc.time ? '<span class="inc-pill">' + escapeHtml(inc.time) + '</span>' : '') +
+          (inc.route ? '<span class="inc-pill">' + escapeHtml(inc.route) + '</span>' : '') +
+          (inc.location ? '<span class="inc-pill">📍 ' + escapeHtml(inc.location) + '</span>' : '') +
+          linked +
+          (inc.ref ? '<span class="inc-pill ref">Ref ' + escapeHtml(inc.ref) + '</span>' : '') +
+        '</div>' +
+        (inc.desc ? '<div class="inc-desc">' + escapeHtml(inc.desc) + '</div>' : '') +
       '</div>';
     }).join('');
 
