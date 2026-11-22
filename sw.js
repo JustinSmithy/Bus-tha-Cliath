@@ -1,6 +1,6 @@
 // Network-first service worker: always tries the live site so updates show up,
 // and falls back to the saved copy only when you're offline.
-const CACHE = 'duty-portal-v' + '2026-11-10';
+const CACHE = 'duty-portal-v' + '2026-11-22';
 
 self.addEventListener('install', function(e){ self.skipWaiting(); });
 
